@@ -19,10 +19,17 @@ from django.urls import path
 from Landing.views import landing
 from login.views import *
 from executive.views import *
+from Api.login     import *
+from Api.kyc       import *
+from Api.idr       import *
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('',landing),
     path('login',LoginUser),
-    path('home',Home)
+    path('home',Home),
+    path('login_api',login),
+    path('pan',pan_kyc),
+    path('cface',compareFace),
+    path('analysis',faceAnalysis)
 ]
