@@ -24,7 +24,6 @@ from rest_framework.decorators import api_view
 @validate_credential
 @csrf_exempt
 def login(request):
-        print('hi.................')
         API_KEY = request.META.get("HTTP_API_KEY")
         API_KEY = request.META.get("HTTP_APP_ID")
         print(API_KEY)
@@ -68,7 +67,6 @@ def login(request):
             response_model["login"]="Incorrect login id"
             response_status=HTTP_401_UNAUTHORIZED
 
-        print('heloo..................')
         #data = {"message": "Success"}
         return Response(data=response_model, status=response_status)
         #return Response(data)
