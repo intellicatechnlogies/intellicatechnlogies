@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'executive',
     'Api',
     'Services',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
