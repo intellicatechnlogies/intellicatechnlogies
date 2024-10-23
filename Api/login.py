@@ -26,8 +26,6 @@ from rest_framework.decorators import api_view
 def login(request):
         API_KEY = request.META.get("HTTP_API_KEY")
         API_KEY = request.META.get("HTTP_APP_ID")
-        print(API_KEY)
-        print(API_KEY)
         request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
         #secret_id         = token_urlsafe(16)
         secret_id          = ""
@@ -56,9 +54,14 @@ def login(request):
         #     response_status=HTTP_401_UNAUTHORIZED
 
         application_data  = request.data
-        print(application_data)
-        login_id=application_data["login"]
-        pwd=application_data['password']
+        login_id=''
+        pwd=''
+        if 'data' in application_data.keys():
+             login_id=application_data['data']["login"] if 'login' in application_data['data'].keys() else ''
+             pwd=application_data['data']["password"] if 'password' in application_data['data'].keys() else ''
+        else:
+            login_id=application_data["login"] if 'login' in application_data.keys() else ''
+            pwd=application_data['password']  if 'password' in application_data.keys() else ''
 
         if login_id=='1234567' and pwd=='234567':
             response_model["services"]=['KYC','IDR','Cface']
