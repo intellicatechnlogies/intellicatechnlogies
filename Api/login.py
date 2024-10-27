@@ -24,6 +24,7 @@ from rest_framework.decorators import api_view
 @validate_credential
 @csrf_exempt
 def login(request):
+        print("hi")
         API_KEY = request.META.get("HTTP_API_KEY")
         API_KEY = request.META.get("HTTP_APP_ID")
         request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
