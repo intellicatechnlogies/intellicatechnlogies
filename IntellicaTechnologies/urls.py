@@ -23,6 +23,7 @@ from Api.login     import *
 from Api.kyc       import *
 from Api.idr       import *
 
+
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('',landing),
