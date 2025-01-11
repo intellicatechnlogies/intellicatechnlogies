@@ -18,7 +18,9 @@ from munch                                  import Munch
 from rest_framework.decorators import api_view
 from IntellicaTechnologies.decorators      import validate_credential
 from django.views.decorators.csrf import csrf_exempt
-from Services.AWS                 import getCompareFaces,getFaceAnalysis
+from Services.AWS                 import getCompareFaces,getFaceAnalysis,upload_Image_to_s3,download_json_from_S3
+import uuid
+
 
 
 @api_view(["POST"])
@@ -38,7 +40,13 @@ def compareFace(request):
     #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
     client_name        =""
     application_data  = request.data
+    print("...............................SS")
+    imageid={}
+    for keys,data in application_data.items():
+       imageid[keys]=upload_Image_to_s3(data)
+
     # Check the request data is correct or not ...
+    print(imageid)
     result={}
     if len(application_data.keys())<2:
         response_code, response_message, response_status = "102", "Minimum two image are required", HTTP_400_BAD_REQUEST
@@ -61,6 +69,7 @@ def compareFace(request):
     response_model["response_code"]       = response_code
     response_model["response_message"]    = response_message
     response_model["result"]              = result
+    response_model['imageid']             = imageid
     response_model["resquest_timestamp"]  = request_timestamp
     response_model["response_timestamp"]  = dt.now(timezone("Asia/Kolkata")).__str__()
     #cl_trx_log.objects.create_log(client_name=client_name, api_key=API_KEY, service="API", api_name="PAN", billable=billable, response_code=response_code, response_message=response_message, trx_id=transaction_id)
@@ -117,4 +126,42 @@ def faceAnalysis(request):
     #cl_trx_log.objects.create_log(client_name=client_name, api_key=API_KEY, service="API", api_name="PAN", billable=billable, response_code=response_code, response_message=response_message, trx_id=transaction_id)
     
     return Response(data=response_model, status=response_status)
+
+
+@api_view(["POST"])
+@validate_credential
+@csrf_exempt
+def downloadImage(request):
+    API_KEY = request.META.get("HTTP_API_KEY")
+    APP_ID  = request.META.get("HTTP_APP_ID")
+
+    request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
+    #secret_id         = token_urlsafe(16)
+    secret_id          = ""
+    #transaction_id    = sha256(secret_id.encode()).hexdigest()
+    transaction_id     =""
+    response_model    = {}
+    response_code     ="101"
+    response_message  ="Success"
+    response_status             =HTTP_200_OK
+    
+    #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
+    client_name        =""
+    application_data  = request.data
+    img=download_json_from_S3(application_data['imagepath'])
+    if img[1]==500:
+         response_code="102"
+         response_message="Incorrect imageid"
+         response_status          = HTTP_400_BAD_REQUEST
+    
+    response_model["transaction_id"]      = transaction_id
+    response_model["success"]             = "True"
+    response_model["response_code"]       = response_code
+    response_model["response_message"]    = response_message
+    response_model["result"]              = img[1]
+    response_model["resquest_timestamp"]  = request_timestamp
+    response_model["response_timestamp"]  = dt.now(timezone("Asia/Kolkata")).__str__()
+
+    return Response(data=response_model, status=response_status)
+    
 
