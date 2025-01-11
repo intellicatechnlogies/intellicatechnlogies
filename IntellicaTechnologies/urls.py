@@ -23,6 +23,7 @@ from Api.login     import *
 from Api.kyc       import *
 from Api.idr       import *
 
+
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('',landing),
@@ -31,5 +32,7 @@ urlpatterns = [
     path('login_api',login),
     path('pan',pan_kyc),
     path('cface',compareFace),
-    path('analysis',faceAnalysis)
+    path('analysis',faceAnalysis),
+    path('nameMatch',name_match),
+    path('distanceMap',getDistanceResult)
 ]

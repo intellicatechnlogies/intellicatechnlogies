@@ -24,8 +24,7 @@ SECRET_KEY = 'django-insecure-ds-s*%@q!k*+lne!z_aig1a6kqp=^m^8a(ng33(*7=a*(w6a89
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['3.85.212.49','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,8 +41,10 @@ INSTALLED_APPS = [
     'executive',
     'Api',
     'Services',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders',   
 ]
+
 
 REST_FRAMEWORK = {
      'DEFAULT_RENDERER_CLASSES': (
@@ -52,14 +53,28 @@ REST_FRAMEWORK = {
  }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Use this or `CORS_ORIGIN_WHITELIST`
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:8000",
+    "https://www.intellicatechnology.com",
+    "https://api.intellicatechnology.com"
+    
+]
+
+CORS_ALLOW_HEADERS = '*'
+CORS_ALLOW_METHODS= '*'
 
 ROOT_URLCONF = 'IntellicaTechnologies.urls'
 
@@ -123,13 +138,21 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS =True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
