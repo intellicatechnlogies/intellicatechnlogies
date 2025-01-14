@@ -3,10 +3,10 @@ from psycopg2 import sql
 
 # Database connection details
 db_params = {   
-        'dbname': 'IntellicaTech',
-        'user': 'Intellica',
-        'password': '8g^[pQR%!Pv{rL+iW(g)',
-        'host': 'intellicatech.cbu0o4ou4s2u.ap-south-1.rds.amazonaws.com',  # Or your database server address
+        'dbname': 'intellica_dev',
+        'user': 'postgres',
+        'password': 'XsIBOOUD&2=oJ-s~HpO%Pz',
+        'host': 'database-2.czog2io4mn87.us-east-1.rds.amazonaws.com',  # Or your database server address
         'port': '5432',       # Default PostgreSQL port
     }   # default PostgreSQL port
 
