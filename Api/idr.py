@@ -40,13 +40,11 @@ def compareFace(request):
     #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
     client_name        =""
     application_data  = request.data
-    print("...............................SS")
     imageid={}
     for keys,data in application_data.items():
        imageid[keys]=upload_Image_to_s3(data)
 
     # Check the request data is correct or not ...
-    print(imageid)
     result={}
     if len(application_data.keys())<2:
         response_code, response_message, response_status = "102", "Minimum two image are required", HTTP_400_BAD_REQUEST
@@ -144,14 +142,20 @@ def downloadImage(request):
     response_code     ="101"
     response_message  ="Success"
     response_status             =HTTP_200_OK
+    img="00500"
     
     #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
     client_name        =""
     application_data  = request.data
-    img=download_json_from_S3(application_data['imagepath'])
-    if img[1]==500:
+    if 'imagepath' in application_data.keys():
+        img=download_json_from_S3(application_data['imagepath'])
+        if img[1]==500:
          response_code="102"
          response_message="Incorrect imageid"
+         response_status          = HTTP_400_BAD_REQUEST
+    else:
+         response_code="102"
+         response_message="imagepath is missing"
          response_status          = HTTP_400_BAD_REQUEST
     
     response_model["transaction_id"]      = transaction_id
