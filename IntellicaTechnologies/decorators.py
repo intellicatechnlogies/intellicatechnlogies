@@ -4,6 +4,7 @@ from functools               import partial, wraps
 from threading               import Thread
 from rest_framework.response import Response
 from rest_framework.status   import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS
+from Api.models              import apiUser
 
 
 def validate_credential(view_func):
@@ -18,7 +19,8 @@ def validate_credential(view_func):
         else:
             #validate_credentials = api_user.objects.validate_credentials(API_KEY=API_KEY, APP_ID=APP_ID)
 
-            validate_credentials=True if API_KEY=='abcd' and APP_ID=='cdef' else False
+            #validate_credentials=True if API_KEY=='abcd' and APP_ID=='cdef' else False
+            validate_credentials=apiUser.objects.validate_credentials(API_KEY=API_KEY, APP_ID=APP_ID)
             if not validate_credentials:
                 response_model["response_code"], response_model["response_message"], response_status = "403", "Bad credentials provided", HTTP_403_FORBIDDEN
                 return Response(data=response_model, status=response_status)

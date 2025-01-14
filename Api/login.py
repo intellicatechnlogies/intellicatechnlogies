@@ -16,44 +16,26 @@ import re
 import imghdr
 from json                                   import dumps as dump_as_JSON
 from munch                                  import Munch
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from django.views.decorators.csrf           import csrf_exempt
+from rest_framework.decorators              import api_view
+from login.models                           import users
 
+
+def loginValidate(login_id,pwd):
+     if users.objects.filter(login_id=login_id):
+          if users.objects.filter(login_id=login_id,password=pwd):
+               return True,"Success"
+          else:
+               return False,"Password is incorrect"
+     else:
+          return False, "Incorrect User id"
 
 @api_view(["POST","OPTIONS"])
 @validate_credential
 @csrf_exempt
 def login(request):
-        print("hi")
-        API_KEY = request.META.get("HTTP_API_KEY")
-        API_KEY = request.META.get("HTTP_APP_ID")
-        request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
-        #secret_id         = token_urlsafe(16)
-        secret_id          = ""
-        #transaction_id    = sha256(secret_id.encode()).hexdigest()
-        transaction_id     =""
+        #request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
         response_model    = {}
-
-        #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
-        client_name        =""
-        # if login=='1234567':
-        #     if password=='2345':
-        #         response_model["services"]=['KYC','IDR']
-        #         response_status=HTTP_200_OK
-        #     else:
-        #         response_model["password"]='Incorrect Password'
-        #         response_status=HTTP_401_UNAUTHORIZED
-        # elif login=='12345678':
-        #     if password=='23456':
-        #         response_model["services"]=['KYC','IDR','Cface']
-        #         response_status=HTTP_200_OK
-        #     else:
-        #         response_model["password"]='Incorrect Password'
-        #         response_status=HTTP_401_UNAUTHORIZED
-        # else:
-        #     response_model["login"]="Incorrect login id"
-        #     response_status=HTTP_401_UNAUTHORIZED
-
         application_data  = request.data
         login_id=''
         pwd=''
@@ -64,14 +46,15 @@ def login(request):
             login_id=application_data["userid"] if 'userid' in application_data.keys() else ''
             pwd=application_data['password']  if 'password' in application_data.keys() else ''
 
-        if login_id=='1234567' and pwd=='234567':
-            response_model["services"]=['KYC','IDR','Cface']
-            response_status=HTTP_200_OK
+        #Validating credentials    
+        login,message=loginValidate(login_id,pwd)
+        if login:
+             response_model["services"]=['KYC','IDR','Cface']
+             response_status=HTTP_200_OK
         else:
-            response_model["userid"]="Incorrect userid/password"
-            response_status=HTTP_401_UNAUTHORIZED
-
-        #data = {"message": "Success"}
+             response_model["userid"]=message
+             response_status=HTTP_401_UNAUTHORIZED
+             
         return Response(data=response_model, status=response_status)
-        #return Response(data)
+        
 
