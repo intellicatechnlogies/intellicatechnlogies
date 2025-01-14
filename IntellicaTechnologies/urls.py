@@ -32,6 +32,7 @@ urlpatterns = [
     path('login_api',login),
     path('pan',pan_kyc),
     path('cface',compareFace),
+    path('getImage',downloadImage),
     path('analysis',faceAnalysis),
     path('nameMatch',name_match),
     path('distanceMap',getDistanceResult)

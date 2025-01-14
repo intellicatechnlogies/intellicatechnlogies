@@ -11,8 +11,8 @@ from termcolor import cprint
 cprint(f'\n\n[INFO] Loading Configuration:', color='yellow', attrs=['bold'])
 configData = {
     "AWS_CONFIG" : {
-        "ACCESS_KEY" : "AKIAYM7POH4LG5WIHVCV",
-        "ACCESS_KEY_SECRET" : "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",
+        "ACCESS_KEY" : "AKIAYM7POH4LPVJMIN3S",
+        "ACCESS_KEY_SECRET" : "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",
         "REGION_NAME" : "us-east-1",
         "AWS_STORAGE_BUCKET_NAME": "intellica-datastore"
     },
