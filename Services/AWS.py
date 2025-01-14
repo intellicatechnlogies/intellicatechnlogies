@@ -216,13 +216,11 @@ def upload_Image_to_s3(image_base64):
     #s3_file_name = f"intellica-datastore/{s3_image_id}.png"
     s3_file_name = f"intellica-datastore/{s3_image_id}.json"
     if b64Hit(base64_string=image_base64):
-        print('hi........')
         dict1={}
         dict1['img']=image_base64
         # S3 = s3_resource()
         # S3.Object("intellica-datastore", s3_file_name).put(Body=image_base64)
         s3_resource().Object("intellica-datastore", f"{s3_file_name}").put(Body=dump_as_JSON(dict1))
-        print('hello')
     
     return s3_file_name
 
