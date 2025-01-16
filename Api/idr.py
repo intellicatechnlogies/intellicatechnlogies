@@ -48,7 +48,7 @@ def compareFace(request):
         billable,result = False, None
     else:
         try:
-             cface_overview,cface_result = getCompareFaces(application_data)
+             cface_overview,cface_result = getCompareFaces(application_data,service='Cface',transaction=transaction_id,api_mode=False,service_type='')
              result["cf_result"]      = cface_result
              result["cf_overview"]    = cface_overview
              response_status          = HTTP_200_OK
@@ -56,9 +56,10 @@ def compareFace(request):
              response_code            ="101"  
              response_message         ="Success"         
         except Exception as ex:
+            print(ex)
             #print_debug_msg(ex)
             billable, response_code, response_message, response_status, result = False, "503", "Service unavialable", HTTP_503_SERVICE_UNAVAILABLE, None
-        
+    apiTransaction.transactionCreated(API_KEY,transaction_id,timestamp,'Cface')
     response_model["transaction_id"]      = transaction_id
     response_model["success"]             = billable == "True"
     response_model["response_code"]       = response_code
@@ -66,7 +67,6 @@ def compareFace(request):
     response_model["result"]              = result
     response_model['imageid']             = imageid
     response_model["resquest_timestamp"]  = request_timestamp
-    apiTransaction.transactionCreated(API_KEY,transaction_id,timestamp,'Cface')
     return Response(data=response_model, status=response_status)
 
 

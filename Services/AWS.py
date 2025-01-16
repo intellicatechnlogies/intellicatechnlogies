@@ -13,7 +13,9 @@ from random      import getrandbits, sample
 from re          import search as regex_search
 from string      import ascii_letters, digits
 from uuid        import uuid1
-
+from Services.TransactionLog  import TransactionLog
+from datetime                               import datetime as dt
+from pytz                                   import timezone
 from IntellicaTechnologies.config import Config
 
 configObj  = Config()
@@ -91,16 +93,20 @@ def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
 
             return (key, matchSimilarity, "SERVICE_DOWN", sourceimgstring, targetimgstring)
 
-def getCompareFaces(image_data, api_mode=False, service_type=""):
+def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
     image_titles = list(image_data)
 
     imagePairs   = [(a, b) for idx, a in enumerate(image_titles) for b in image_titles[idx + 1:]]
     
     dim = len(image_titles)
-
+   
     with concurrent.futures.ThreadPoolExecutor(max_workers=21) as executor:
         futures = []
+        response_data={}
         for pair in imagePairs:
+            timestamp=int(dt.timestamp(
+                dt.now(timezone("Asia/Kolkata")))*1000000)
+            TransactionLog.createTransactionLog(transaction,service,11111,True,"101",timestamp,response_data)
             futures.append(
                 executor.submit(
                     CompareFaces, 
