@@ -33,6 +33,7 @@ urlpatterns = [
     path('pan',pan_kyc),
     path('cface',compareFace),
     path('getImage',downloadImage),
+    path('getResult',downloadResult),
     path('analysis',faceAnalysis),
     path('nameMatch',name_match),
     path('distanceMap',getDistanceResult)

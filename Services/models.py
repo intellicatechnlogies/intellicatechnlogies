@@ -28,4 +28,17 @@ class transactions_log(models.Model):
     trx_type          = models.CharField(null=False,blank=False,max_length=12,default="BULK")             # BULK, IDR or just a KYC?
     response_metadata = models.JSONField(null=False,blank=False,default=dict)
     source_resp_time  = models.CharField(max_length=50, null=False, blank=False, default="ABC123")        
-    overall_resp_time = models.CharField(max_length=50, null=False, blank=False, default="ABC123")        
+    overall_resp_time = models.CharField(max_length=50, null=False, blank=False, default="ABC123") 
+
+class service_result(models.Model):
+    login_id            = models.BigIntegerField(null=False,blank=False,default=111111)
+    Application_number  = models.CharField(max_length=200,default="111111",null=False,blank=False) 
+    State               = models.CharField(max_length=200,default="India",null=False,blank=False)
+    request_id          = models.CharField(max_length=64,default="111111",null=False,blank=False)   
+    service_name        = models.CharField(max_length=100,default="Intellica",null=False,blank=False)  
+    billable            = models.BooleanField(null=False,blank=False,default=False)
+    timestamp           = models.BigIntegerField(null=False,blank=False,default=111111)  
+    result_view         = models.BooleanField(null=False,blank=False,default=False)
+    result_download     = models.BooleanField(null=False,blank=False,default=False)
+
+

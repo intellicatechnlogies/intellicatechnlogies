@@ -94,6 +94,10 @@ def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
             return (key, matchSimilarity, "SERVICE_DOWN", sourceimgstring, targetimgstring)
 
 def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
+    userId=1111
+    if "userId" in image_data.keys():
+        userId=image_data['userId']
+        del image_data['userId']
     image_titles = list(image_data)
 
     imagePairs   = [(a, b) for idx, a in enumerate(image_titles) for b in image_titles[idx + 1:]]
@@ -106,7 +110,7 @@ def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
         for pair in imagePairs:
             timestamp=int(dt.timestamp(
                 dt.now(timezone("Asia/Kolkata")))*1000000)
-            TransactionLog.createTransactionLog(transaction,service,11111,True,"101",timestamp,response_data)
+            TransactionLog.createTransactionLog(transaction,service,userId,True,"101",timestamp,response_data)
             futures.append(
                 executor.submit(
                     CompareFaces, 
@@ -230,7 +234,7 @@ def upload_Image_to_s3(image_base64):
     
     return s3_file_name
 
-def upload_JSON_to_s3(input_dict, service="IDR", s3_file_name=None):
+def upload_JSON_to_s3(input_dict,s3_file_name=None):
     """
         Allows for the upload of a dict to a s3 object, may need fleshing out down the line, returns location
         of file in S3
@@ -239,10 +243,9 @@ def upload_JSON_to_s3(input_dict, service="IDR", s3_file_name=None):
             :param input_dict: input dictionary to push to S3 as JSON
             :return: Tuple of bucket_name and s3_file_name
     """
-    if service in ["ERPV", "IDR"]: bucket = settings.AWS_STORAGE_BUCKET_NAME
-    elif service == "FSEARCH"    : bucket = settings.AWS_FS_REPO_BUCKET_NAME
+    s3_file_name = f"intellica-datastore/{s3_file_name}.json"
     
-    s3_resource().Object(bucket, f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
+    s3_resource().Object("intellica-datastore", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
     
     return s3_file_name.replace(".json","")
 

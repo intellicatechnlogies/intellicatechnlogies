@@ -36,9 +36,6 @@ def pan_kyc(request):
     #transaction_id    = sha256(secret_id.encode()).hexdigest()
     transaction_id     =""
     response_model    = {}
-    
-    #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
-    client_name        =""
     application_data  = request.data
     # Check the request data is correct or not ...
     if "pan_number" not in application_data.keys():
@@ -89,9 +86,7 @@ def name_match(request):
     #transaction_id    = sha256(secret_id.encode()).hexdigest()
     transaction_id     =""
     response_model    = {}
-    
-    #client_name       = api_user.objects.get_client_name(API_KEY=API_KEY,APP_ID=APP_ID)
-    client_name        =""
+
     application_data  = request.data
     # Check the request data is correct or not ...
     if "name1" not in application_data.keys() or "name2" not in application_data.keys():
