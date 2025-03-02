@@ -3,7 +3,7 @@ import pandas as pd
 from base64      import b64decode, b64encode
 from boto3       import client as init_aws_client, resource as init_aws_resource
 from botocore    import exceptions as botocore_exceptions
-from cv2         import imdecode, imencode, imwrite as write_image_to_disk, line, ellipse, IMREAD_COLOR
+#from cv2         import imdecode, imencode, imwrite as write_image_to_disk, line, ellipse, IMREAD_COLOR
 from django.conf import settings
 from json        import dumps as dump_as_JSON, loads as load_as_JSON
 from math        import ceil
@@ -30,14 +30,14 @@ gen_file_name = lambda: "".join(sample(ascii_letters+digits+ascii_letters, k=48)
 
 collection_name = "IntellicaTest"
 
-def base64_to_np_arr(base64_str):
-    im_bytes = b64decode(base64_str)
-    im_arr = frombuffer(im_bytes, dtype=uint8)
-    return imdecode(im_arr, flags=IMREAD_COLOR)
+# def base64_to_np_arr(base64_str):
+#     im_bytes = b64decode(base64_str)
+#     im_arr = frombuffer(im_bytes, dtype=uint8)
+#     return imdecode(im_arr, flags=IMREAD_COLOR)
 
-def np_arr_to_bytes(np_arr, extn=".jpeg"):
-    _, im_arr = imencode(extn, np_arr)
-    return b64encode(im_arr.tobytes())
+# def np_arr_to_bytes(np_arr, extn=".jpeg"):
+#     _, im_arr = imencode(extn, np_arr)
+#     return b64encode(im_arr.tobytes())
 
 
 """
@@ -56,10 +56,10 @@ def np_arr_to_bytes(np_arr, extn=".jpeg"):
                     ╚═╝      ╚═╝  ╚═╝  ╚═════╝ ╚══════╝ ╚══════╝    
 """
 
-def base64_to_np_arr(base64_str):
-    im_bytes = b64decode(base64_str)
-    im_arr = frombuffer(im_bytes, dtype=uint8)
-    return imdecode(im_arr, flags=IMREAD_COLOR)
+# def base64_to_np_arr(base64_str):
+#     im_bytes = b64decode(base64_str)
+#     im_arr = frombuffer(im_bytes, dtype=uint8)
+#     return imdecode(im_arr, flags=IMREAD_COLOR)
 
 def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
     if sourceimgstring == targetimgstring and (sourceimgstring != "" and targetimgstring != ""):
