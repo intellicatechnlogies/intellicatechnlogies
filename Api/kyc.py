@@ -31,9 +31,7 @@ def pan_kyc(request):
     APP_ID  = request.META.get("HTTP_APP_ID")
 
     request_timestamp = dt.now(timezone("Asia/Kolkata")).__str__()
-    #secret_id         = token_urlsafe(16)
     secret_id          = ""
-    #transaction_id    = sha256(secret_id.encode()).hexdigest()
     transaction_id     =""
     response_model    = {}
     application_data  = request.data

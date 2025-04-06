@@ -12,20 +12,15 @@ from json                                   import dumps as dump_as_JSON
 from munch                                  import Munch
 from django.views.decorators.csrf           import csrf_exempt
 from rest_framework.decorators              import api_view
-from models                                 import ServiceResult
 from rest_framework.response                import Response
 from rest_framework.status                  import HTTP_200_OK
+from Services.models                        import service_result
 
 
-@api_view(["GET","OPTIONS"])
+@api_view(["GET","OPTIONS","POST"])
 @validate_credential
 @csrf_exempt
 def get_request_list(request):
     login_id = request.data.get('login_id')
-    sr_result = list(ServiceResult.objects.filter(login_id=login_id).values_list('request_id',flat=True))
-    
-    if sr_result:
-        response_status=HTTP_200_OK
-        return Response(data={"login_id":login_id,"request_list": sr_result}, status=response_status)
- 
-    return Response(data={"login_id":login_id,"request_list": []}, status=response_status)
+    sr_result=service_result.objects.filter(login_id=login_id).order_by('-timestamp').values("Application_number","State","request_id","service_name","billable","timestamp")
+    return Response(data=sr_result, status=HTTP_200_OK)

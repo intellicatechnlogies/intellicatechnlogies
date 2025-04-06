@@ -22,6 +22,7 @@ from executive.views import *
 from Api.login     import *
 from Api.kyc       import *
 from Api.idr       import *
+from Api.service_details import get_request_list
 
 
 urlpatterns = [
@@ -36,5 +37,6 @@ urlpatterns = [
     path('getResult',downloadResult),
     path('analysis',faceAnalysis),
     path('nameMatch',name_match),
-    path('distanceMap',getDistanceResult)
+    path('distanceMap',getDistanceResult),
+    path('serviceResult',get_request_list)
 ]
