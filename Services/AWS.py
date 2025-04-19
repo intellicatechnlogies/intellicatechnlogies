@@ -249,6 +249,22 @@ def upload_JSON_to_s3(input_dict,s3_file_name=None):
     
     return s3_file_name.replace(".json","")
 
+def upload_Pdf_to_s3(response,s3_file_name=None):
+    """
+        Allows for the upload of a dict to a s3 object, may need fleshing out down the line, returns location
+        of file in S3
+            :param s3_bucket_name: S3 bucket name to push dict/JSON to
+            :param s3_file_name: File name
+            :param input_dict: input dictionary to push to S3 as JSON
+            :return: Tuple of bucket_name and s3_file_name
+    """
+    s3_file_name = "{s3_file_name}.pdf"
+    
+    #s3_resource().Object("s3-pdf-store", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
+    s3_resource.upload_file(response,"s3-pdf-store",s3_file_name)
+    
+    return s3_file_name
+
 def download_pdf_from_s3(s3_file_name, service="IDR"):
     """
         Allows for the download an s3 object as base64 string.

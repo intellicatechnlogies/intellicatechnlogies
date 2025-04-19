@@ -23,6 +23,7 @@ from Api.login     import *
 from Api.kyc       import *
 from Api.idr       import *
 from Api.service_details import get_request_list
+from Services.pdfReport  import cface_report
 
 
 urlpatterns = [
@@ -38,5 +39,6 @@ urlpatterns = [
     path('analysis',faceAnalysis),
     path('nameMatch',name_match),
     path('distanceMap',getDistanceResult),
-    path('serviceResult',get_request_list)
+    path('serviceResult',get_request_list),
+    path('pdfReport/',cface_report)
 ]

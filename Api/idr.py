@@ -138,6 +138,7 @@ def downloadImage(request):
     client_name        =""
     application_data  = request.data
     if 'imagepath' in application_data.keys():
+        print("downloadImage..............................................................",application_data['imagepath'])
         img=download_json_from_S3(application_data['imagepath'])
         if img[1]==500:
          response_code="102"
@@ -182,6 +183,7 @@ def downloadResult(request):
     if 'trxid' in application_data.keys():
         trx_id=application_data['trxid']
         filename="intellica-datastore/"+trx_id+".json"
+        print("downloadResult..............................................................",filename)
         img=download_json_from_S3(filename)
         if img[1]==500:
          response_code="102"
