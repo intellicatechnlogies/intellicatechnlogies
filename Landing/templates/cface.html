@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  margin-top: 30px;
+}
+
+/* Clear floats after the columns */
+.cface_header{
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            color: rgb(23, 3, 56);
+            font-size: 30px;
+            height: 30px;
+            text-align: center;
+            justify-content: center;
+            width: 90%;
+        }
+.cface_percentage{
+            margin-top: 400px;
+            align-items: center;
+            color: rgb(6, 0, 16);
+            font-size: 20px;
+            height: 30px;
+            text-align: center;
+            justify-content: center;
+            width: 90%;
+
+}
+.detail {
+            background-color: #0d111f6b;
+            align-items: center;
+            color: white;
+            font-size: 23px;
+            height: 30px;
+            text-align: center;
+            justify-content: center;
+        }
+.overall{
+            margin-top: 20px;
+            font-size: 17px;
+            border: lightgray;
+            border-style: ridge;
+            width: 90%;
+}
+</style>
+</head>
+<body>
+    <div class="cface_header">
+        <strong>Compare Face Results</strong>
+    </div>
+{% for result_data in result.result.cf_result %}
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+  <div class="column">
+    <table>
+        <tbody>
+            <tr>
+                <td style="text-align:center;align-items: center"><strong>{{result_data.SRC_TITLE}}&nbsp; Image</strong></td>
+            </tr>
+            <tr>
+                <td><img src="data:image/png;base64,{% for img_key, img_val in result.imageid.items %}{% if img_key == result_data.SRC_TITLE|safe %}{{img_val}}{% endif %}{% endfor %}" style="width:350px;height: 550px;margin-left: -30px;"></td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+    <div class="column">
+        <table>
+            <tbody>
+                <tr>
+                    <td style="text-align:center;align-items: center;"><strong>{{result_data.TRGT_TITLE}}&nbsp; Image</strong></td>
+                </tr>
+                {{TRGT_TITLE}}
+                <tr>
+                    <td><img src="data:image/png;base64,{% for img_key, img_val in result.imageid.items %}{% if img_key == result_data.TRGT_TITLE|safe %}{{img_val}}{% endif %}{% endfor %}" style="width:350px;height: 550px;margin-left: -30px;"></td>
+                </tr>
+            </tbody>
+        </table>
+</div><br/><br/><br/><br/>
+<div class="cface_percentage">
+    <td><strong>Matched Percentage&nbsp;&nbsp;&nbsp;&nbsp;{{result_data.PERCENT}}&nbsp;({{result_data.FLAG}})</strong></td> 
+</div>
+<p style="page-break-after: always;">&nbsp;</p>
+{% endfor %}
+<div class="overall">
+    <div class="detail">
+        <strong>Overall Details</strong>
+    </div>
+    <table>
+        <tr>
+            <td class="voter"><strong>Number of image </strong></td>
+            <td class="voter-data">{{result.result.cf_overview.NUM_IMG}}</td>
+        </tr>
+        <tr>
+            <td class="voter"><strong>Match</strong></td>
+            <td class="voter-data">{{result.result.cf_overview.MATCH}}</td>
+        </tr>
+        <tr>
+            <td class="voter"><strong>No Match</strong></td>
+            <td class="voter-data">{{result.result.cf_overview.NO_MATCH}}</td>
+        </tr>
+        <tr>
+            <td class="voter"><strong>Invalid </strong></td>
+            <td class="voter-data">{{result.result.cf_overview.INVALID}}</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

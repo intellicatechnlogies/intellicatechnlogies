@@ -43,4 +43,19 @@ class Migration(migrations.Migration):
                 ('overall_resp_time', models.CharField(default='ABC123', max_length=50)),
             ],
         ),
+        migrations.CreateModel(
+            name='service_result',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('login_id', models.BigIntegerField(default=111111)),
+                ('Application_number', models.CharField(default='111111', max_length=200)),
+                ('State', models.CharField(default='India', max_length=200)),
+                ('request_id', models.CharField(default='111111', max_length=64)),
+                ('service_name', models.CharField(default='Intellica', max_length=100)),
+                ('billable', models.BooleanField(default=False)),
+                ('timestamp', models.BigIntegerField(default=111111)),
+                ('result_view', models.BooleanField(default=False)),
+                ('result_download', models.BooleanField(default=False)),
+            ],
+        ),
     ]

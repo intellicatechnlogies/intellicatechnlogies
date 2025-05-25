@@ -18,3 +18,10 @@ class transactions_log(models.Model):
     service          = models.CharField(null=False, blank=False, max_length=100, default="ABCDWXYZ")
     timestamp        = models.BigIntegerField(null=False,blank=False,default=0)                          # date-time stamp of the final record entry...
     trx_id           = models.CharField(max_length=40, null=False, blank=False, default="ABC123")
+
+
+class ServiceResult(models.Model):
+    id              = models.AutoField(primary_key=True)
+    login_id        = models.BigIntegerField(null=False,blank=False)
+    request_id      = models.CharField(null=False ,blank=False ,max_length=64)
+

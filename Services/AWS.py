@@ -3,7 +3,7 @@ import pandas as pd
 from base64      import b64decode, b64encode
 from boto3       import client as init_aws_client, resource as init_aws_resource
 from botocore    import exceptions as botocore_exceptions
-from cv2         import imdecode, imencode, imwrite as write_image_to_disk, line, ellipse, IMREAD_COLOR
+#from cv2         import imdecode, imencode, imwrite as write_image_to_disk, line, ellipse, IMREAD_COLOR
 from django.conf import settings
 from json        import dumps as dump_as_JSON, loads as load_as_JSON
 from math        import ceil
@@ -13,7 +13,9 @@ from random      import getrandbits, sample
 from re          import search as regex_search
 from string      import ascii_letters, digits
 from uuid        import uuid1
-
+from Services.TransactionLog  import TransactionLog
+from datetime                               import datetime as dt
+from pytz                                   import timezone
 from IntellicaTechnologies.config import Config
 
 configObj  = Config()
@@ -28,14 +30,14 @@ gen_file_name = lambda: "".join(sample(ascii_letters+digits+ascii_letters, k=48)
 
 collection_name = "IntellicaTest"
 
-def base64_to_np_arr(base64_str):
-    im_bytes = b64decode(base64_str)
-    im_arr = frombuffer(im_bytes, dtype=uint8)
-    return imdecode(im_arr, flags=IMREAD_COLOR)
+# def base64_to_np_arr(base64_str):
+#     im_bytes = b64decode(base64_str)
+#     im_arr = frombuffer(im_bytes, dtype=uint8)
+#     return imdecode(im_arr, flags=IMREAD_COLOR)
 
-def np_arr_to_bytes(np_arr, extn=".jpeg"):
-    _, im_arr = imencode(extn, np_arr)
-    return b64encode(im_arr.tobytes())
+# def np_arr_to_bytes(np_arr, extn=".jpeg"):
+#     _, im_arr = imencode(extn, np_arr)
+#     return b64encode(im_arr.tobytes())
 
 
 """
@@ -54,10 +56,10 @@ def np_arr_to_bytes(np_arr, extn=".jpeg"):
                     ╚═╝      ╚═╝  ╚═╝  ╚═════╝ ╚══════╝ ╚══════╝    
 """
 
-def base64_to_np_arr(base64_str):
-    im_bytes = b64decode(base64_str)
-    im_arr = frombuffer(im_bytes, dtype=uint8)
-    return imdecode(im_arr, flags=IMREAD_COLOR)
+# def base64_to_np_arr(base64_str):
+#     im_bytes = b64decode(base64_str)
+#     im_arr = frombuffer(im_bytes, dtype=uint8)
+#     return imdecode(im_arr, flags=IMREAD_COLOR)
 
 def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
     if sourceimgstring == targetimgstring and (sourceimgstring != "" and targetimgstring != ""):
@@ -91,16 +93,24 @@ def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
 
             return (key, matchSimilarity, "SERVICE_DOWN", sourceimgstring, targetimgstring)
 
-def getCompareFaces(image_data, api_mode=False, service_type=""):
+def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
+    userId=1111
+    if "userId" in image_data.keys():
+        userId=image_data['userId']
+        del image_data['userId']
     image_titles = list(image_data)
 
     imagePairs   = [(a, b) for idx, a in enumerate(image_titles) for b in image_titles[idx + 1:]]
     
     dim = len(image_titles)
-
+   
     with concurrent.futures.ThreadPoolExecutor(max_workers=21) as executor:
         futures = []
+        response_data={}
         for pair in imagePairs:
+            timestamp=int(dt.timestamp(
+                dt.now(timezone("Asia/Kolkata")))*1000000)
+            TransactionLog.createTransactionLog(transaction,service,userId,True,"101",timestamp,response_data)
             futures.append(
                 executor.submit(
                     CompareFaces, 
@@ -224,7 +234,7 @@ def upload_Image_to_s3(image_base64):
     
     return s3_file_name
 
-def upload_JSON_to_s3(input_dict, service="IDR", s3_file_name=None):
+def upload_JSON_to_s3(input_dict,s3_file_name=None):
     """
         Allows for the upload of a dict to a s3 object, may need fleshing out down the line, returns location
         of file in S3
@@ -233,12 +243,27 @@ def upload_JSON_to_s3(input_dict, service="IDR", s3_file_name=None):
             :param input_dict: input dictionary to push to S3 as JSON
             :return: Tuple of bucket_name and s3_file_name
     """
-    if service in ["ERPV", "IDR"]: bucket = settings.AWS_STORAGE_BUCKET_NAME
-    elif service == "FSEARCH"    : bucket = settings.AWS_FS_REPO_BUCKET_NAME
+    s3_file_name = f"intellica-datastore/{s3_file_name}.json"
     
-    s3_resource().Object(bucket, f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
+    s3_resource().Object("intellica-datastore", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
     
     return s3_file_name.replace(".json","")
+
+def upload_Pdf_to_s3(response,s3_file_name=None):
+    """
+        Allows for the upload of a dict to a s3 object, may need fleshing out down the line, returns location
+        of file in S3
+            :param s3_bucket_name: S3 bucket name to push dict/JSON to
+            :param s3_file_name: File name
+            :param input_dict: input dictionary to push to S3 as JSON
+            :return: Tuple of bucket_name and s3_file_name
+    """
+    s3_file_name = "{s3_file_name}.pdf"
+    
+    #s3_resource().Object("s3-pdf-store", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
+    s3_resource.upload_file(response,"s3-pdf-store",s3_file_name)
+    
+    return s3_file_name
 
 def download_pdf_from_s3(s3_file_name, service="IDR"):
     """

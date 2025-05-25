@@ -22,6 +22,8 @@ from executive.views import *
 from Api.login     import *
 from Api.kyc       import *
 from Api.idr       import *
+from Api.service_details import get_request_list
+from Services.pdfReport  import cface_report
 
 
 urlpatterns = [
@@ -33,7 +35,10 @@ urlpatterns = [
     path('pan',pan_kyc),
     path('cface',compareFace),
     path('getImage',downloadImage),
+    path('getResult',downloadResult),
     path('analysis',faceAnalysis),
     path('nameMatch',name_match),
-    path('distanceMap',getDistanceResult)
+    path('distanceMap',getDistanceResult),
+    path('serviceResult',get_request_list),
+    path('pdfReport/',cface_report)
 ]
