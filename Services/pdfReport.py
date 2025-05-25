@@ -34,7 +34,6 @@ def cface_report(request):
     result_image={}
     transaction_id=""
     request_id = request.GET.get('trxid')
-    print('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',request_id)
     if request_id:
         filename="intellica-datastore/"+request_id+".json"
         result=download_json_from_S3(filename)
@@ -44,20 +43,14 @@ def cface_report(request):
          response_message="Incorrect imageid"
          response_status          = HTTP_400_BAD_REQUEST
         else:
-            print('hi............................................................')
             response_code=101
             cface_result=result[1]
-            print(cface_result)
             response_model.result=getResultWithImage(cface_result)
             response_status=HTTP_200_OK
-            print('Exxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
             template = get_template("report.html")
-            print("ressssssssssssssssssssssssssssssssssssssssssss")
             #response =  HttpResponse(HTML(string=template.render(result_image)).write_pdf(), content_type='application/pdf/force-download')
             response =  HttpResponse(HTML(string=template.render(response_model)).write_pdf(), content_type='application/pdf/force-download')
-            print('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCcc')
             response['Content-Disposition'] = f'attachment; filename="Cface_Result_{request_id}.pdf"'
-            print('hoiiiiiiiiiiiiiiiiiiiiiiiiiiii')
             return response
     else:
          response_code="102"
