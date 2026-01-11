@@ -107,6 +107,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'IntellicaTech',
+#         'USER': 'Intellica',
+#         'PASSWORD': 'Z=HTk{]V%8o#XNP',
+#         'HOST': 'intellicatech.cbu0o4ou4s2u.ap-south-1.rds.amazonaws.com',  # Or your database server address
+#         'PORT': '5432',       # Default PostgreSQL port
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

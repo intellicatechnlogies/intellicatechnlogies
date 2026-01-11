@@ -43,3 +43,4 @@ imutils
 fuzzywuzzy
 jellyfish
 gender-guesser
+"psycopg[binary]"
