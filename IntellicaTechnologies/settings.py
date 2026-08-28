@@ -115,16 +115,16 @@ WSGI_APPLICATION = 'IntellicaTechnologies.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database backend
-        'NAME': 'intellica_dev',  # Database name
-        'USER': 'postgres',   # Database user
-        'PASSWORD': 'XsIBOOUD&2=oJ-s~HpO%Pz',  # Database password
-        'HOST': 'database-2.czog2io4mn87.us-east-1.rds.amazonaws.com',  # Host address
-        'PORT': '5432',  # Default PostgreSQL port
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database backend
+#         'NAME': 'intellica_dev',  # Database name
+#         'USER': 'postgres',   # Database user
+#         'PASSWORD': 'XsIBOOUD&2=oJ-s~HpO%Pz',  # Database password
+#         'HOST': 'database-2.czog2io4mn87.us-east-1.rds.amazonaws.com',  # Host address
+#         'PORT': '5432',  # Default PostgreSQL port
+#     }
+# }
 
 
 
