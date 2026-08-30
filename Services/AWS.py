@@ -224,13 +224,13 @@ def IMG2PNG(image_base64):
 def upload_Image_to_s3(image_base64):
     s3_image_id  = str(uuid1(getrandbits(48)))
     #s3_file_name = f"intellica-datastore/{s3_image_id}.png"
-    s3_file_name = f"intellica-datastore/{s3_image_id}.json"
+    s3_file_name = f"intellica-datastorenew/{s3_image_id}.json"
     if b64Hit(base64_string=image_base64):
         dict1={}
         dict1['img']=image_base64
         # S3 = s3_resource()
         # S3.Object("intellica-datastore", s3_file_name).put(Body=image_base64)
-        s3_resource().Object("intellica-datastore", f"{s3_file_name}").put(Body=dump_as_JSON(dict1))
+        s3_resource().Object("intellica-datastorenew", f"{s3_file_name}").put(Body=dump_as_JSON(dict1))
     
     return s3_file_name
 
@@ -243,9 +243,9 @@ def upload_JSON_to_s3(input_dict,s3_file_name=None):
             :param input_dict: input dictionary to push to S3 as JSON
             :return: Tuple of bucket_name and s3_file_name
     """
-    s3_file_name = f"intellica-datastore/{s3_file_name}.json"
+    s3_file_name = f"intellica-datastorenew/{s3_file_name}.json"
     
-    s3_resource().Object("intellica-datastore", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
+    s3_resource().Object("intellica-datastorenew", f"{s3_file_name}").put(Body=dump_as_JSON(input_dict))
     
     return s3_file_name.replace(".json","")
 
@@ -296,7 +296,7 @@ def download_json_from_S3(s3_file_name):
     try: 
         # if service in ["ERPV", "IDR"]: bucket = settings.AWS_STORAGE_BUCKET_NAME
         # elif service == "FSEARCH"    : bucket = settings.AWS_FS_REPO_BUCKET_NAME
-        JSON_from_s3 = load_as_JSON(s3_resource().Object("intellica-datastore", s3_file_name).get()["Body"].read().decode('utf-8'))
+        JSON_from_s3 = load_as_JSON(s3_resource().Object("intellica-datastorenew", s3_file_name).get()["Body"].read().decode('utf-8'))
         return (True, JSON_from_s3)
     except botocore_exceptions.ClientError as ex:
         if ex.response['Error']['Code'] == "404":

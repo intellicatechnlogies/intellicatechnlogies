@@ -7,12 +7,13 @@ from django.views.decorators.cache          import never_cache
 from django.views.decorators.http           import require_http_methods
 from pytz                                   import timezone
 from random                                 import getrandbits
+from Services.models import transactions_log
 import requests
 from rest_framework.response import Response
 from rest_framework.status   import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS,HTTP_400_BAD_REQUEST,HTTP_200_OK,HTTP_503_SERVICE_UNAVAILABLE
 from IntellicaTechnologies.regexValidators  import RegexPan_number,RegexMobile_number,RegexValidateDL, RegexEpic_number, RegexEmail_id, Regex_gst,RegexCylinder_number,RegexEbill_number,RegexService_provider_number,RegexMobile_number,RegexFssai_Number,RegexMsme_number,RegexRC_number,RegexAadhaar_number,RegexPan_number_Person,RegexPan_number_Person
 import re
-import imghdr
+#import imghdr
 from json                                   import dumps as dump_as_JSON
 from munch                                  import Munch
 from rest_framework.decorators import api_view
@@ -72,7 +73,7 @@ def pan_kyc(request):
     return Response(data=response_model, status=response_status)
 
 @api_view(["POST"])
-@validate_credential
+#@validate_credential
 @csrf_exempt
 def name_match(request):
     API_KEY = request.META.get("HTTP_API_KEY")
@@ -82,7 +83,7 @@ def name_match(request):
     #secret_id         = token_urlsafe(16)
     secret_id          = ""
     #transaction_id    = sha256(secret_id.encode()).hexdigest()
-    transaction_id     =""
+    transaction_id     ="Test"
     response_model    = {}
 
     application_data  = request.data
@@ -115,8 +116,7 @@ def name_match(request):
     response_model["result"]              = result
     response_model["resquest_timestamp"]  = request_timestamp
     response_model["response_timestamp"]  = dt.now(timezone("Asia/Kolkata")).__str__()
-    #cl_trx_log.objects.create_log(client_name=client_name, api_key=API_KEY, service="API", api_name="PAN", billable=billable, response_code=response_code, response_message=response_message, trx_id=transaction_id)
-    
+    transactions_log.objects.create(trx_id=transaction_id, api_id="test", appl_no="test",product="test",state="test",login_id=11111,bill_slab="test",billable=True,resp_code="101",timestamp=12322323,trx_type="Kyc",response_metadata='{"test":"test"}',source_resp_time='Test',overall_resp_time="Test")
     return Response(data=response_model, status=response_status)
 
 
