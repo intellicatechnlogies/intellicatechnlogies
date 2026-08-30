@@ -24,6 +24,7 @@ from Api.kyc       import *
 from Api.idr       import *
 from Api.service_details import get_request_list
 from Services.pdfReport  import cface_report
+from Api.data_insert import data_insert
 
 
 urlpatterns = [
@@ -40,5 +41,6 @@ urlpatterns = [
     path('nameMatch',name_match),
     path('distanceMap',getDistanceResult),
     path('serviceResult',get_request_list),
-    path('pdfReport/',cface_report)
+    path('pdfReport/',cface_report),
+    path('data_insert/',data_insert)
 ]

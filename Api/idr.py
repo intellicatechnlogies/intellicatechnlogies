@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.status   import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS,HTTP_400_BAD_REQUEST,HTTP_200_OK,HTTP_503_SERVICE_UNAVAILABLE
 from IntellicaTechnologies.regexValidators  import RegexPan_number,RegexMobile_number,RegexValidateDL, RegexEpic_number, RegexEmail_id, Regex_gst,RegexCylinder_number,RegexEbill_number,RegexService_provider_number,RegexMobile_number,RegexFssai_Number,RegexMsme_number,RegexRC_number,RegexAadhaar_number,RegexPan_number_Person,RegexPan_number_Person
 import re
-import imghdr
+#import imghdr
 from json                                   import dumps as dump_as_JSON
 from munch                                  import Munch
 from rest_framework.decorators import api_view
@@ -26,7 +26,7 @@ from Services.TransactionLog      import TransactionLog
 
 
 @api_view(["POST"])
-@validate_credential
+#@validate_credential
 @csrf_exempt
 def compareFace(request):
     API_KEY = request.META.get("HTTP_API_KEY")

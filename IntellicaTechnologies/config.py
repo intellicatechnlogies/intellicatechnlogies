@@ -11,10 +11,10 @@ from termcolor import cprint
 cprint(f'\n\n[INFO] Loading Configuration:', color='yellow', attrs=['bold'])
 configData = {
     "AWS_CONFIG" : {
-        "ACCESS_KEY" : "AKIAYM7POH4LPVJMIN3S",
-        "ACCESS_KEY_SECRET" : "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",
-        "REGION_NAME" : "us-east-1",
-        "AWS_STORAGE_BUCKET_NAME": "intellica-datastore"
+        "ACCESS_KEY" : "AKIAU6DARNTR6PJ43SIN",
+        "ACCESS_KEY_SECRET" : "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",
+        "REGION_NAME" : "ap-south-1",
+        "AWS_STORAGE_BUCKET_NAME": "intellica-datastorenew"
     },
     "DATABASE_CONFIG" : {
         "ENGINE" : "django.db.backends.postgresql_psycopg2",
