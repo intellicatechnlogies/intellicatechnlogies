@@ -58,8 +58,50 @@
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="#hero" class="active">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
+            <li class="dropdown">
+              <a href="#about"><span>About</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#about">Who we are</a></li>
+                <li><a href="#why-intellica">Why Intellica</a></li>
+                <li><a href="#industries">Industries we support</a></li>
+                <li><a href="#process">Our approach</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#services"><span>Services</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#services">KYC verification</a></li>
+                <li><a href="#services">Custom web development</a></li>
+                <li><a href="#services">Document recognition</a></li>
+                <li><a href="#services">Cloud integration</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#solution-suite"><span>Solutions</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#identity-checks">Individual KYC</a></li>
+                <li><a href="#document-intelligence">Document intelligence</a></li>
+                <li><a href="#business-verification">Business KYB</a></li>
+                <li><a href="#risk-intelligence">Fraud &amp; risk intelligence</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#process"><span>How it works</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#process">Collect information</a></li>
+                <li><a href="#process">Verify with confidence</a></li>
+                <li><a href="#process">Grow with insight</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="#industries"><span>Industries</span><i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#industries">Banking &amp; fintech</a></li>
+                <li><a href="#industries">Commerce &amp; marketplaces</a></li>
+                <li><a href="#industries">Workforce &amp; HR</a></li>
+                <li><a href="#industries">Insurance &amp; healthcare</a></li>
+              </ul>
+            </li>
             <li><a href="#contact">Contact</a></li>
           </ul>
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -83,6 +125,14 @@
               <p class="text-md-start" data-aos="fade-up" data-aos-delay="200">
                 We are providing the platform of KYC process for verifying the identity of users on our platform. It involves collecting and validating personal information, such as identification documents, to ensure compliance with legal and regulatory standards, prevent fraud, and maintain the security of our services.
               </p>
+              <div class="hero-actions" data-aos="fade-up" data-aos-delay="300">
+                <a href="#services" class="btn-primary-custom">Explore our solutions <i class="bi bi-arrow-right"></i></a>
+                <a href="#process" class="btn-link-custom"><i class="bi bi-play-circle"></i> See how it works</a>
+              </div>
+              <div class="hero-trust" data-aos="fade-up" data-aos-delay="400">
+                <span><i class="bi bi-shield-check"></i> Secure by design</span>
+                <span><i class="bi bi-lightning-charge"></i> Built for speed</span>
+              </div>
             </div>
             <!-- <div class="col-lg-5" data-aos="fade-up" data-aos-delay="300">
               <form
@@ -390,6 +440,165 @@
         </div>
       </section>
       <!-- /Services Section -->
+
+      <!-- Solution Suite Section -->
+      <section id="solution-suite" class="solution-suite section">
+        <div class="container section-title" data-aos="fade-up">
+          <span class="eyebrow">One platform, many possibilities</span>
+          <h2>Choose the checks your workflow needs</h2>
+          <p>Start with one verification and build a complete trust layer around it. Our modular services are designed to work independently or as one connected journey.</p>
+        </div>
+        <div class="container">
+          <div class="row gy-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+              <article id="identity-checks" class="suite-card suite-card-primary">
+                <div class="suite-icon"><i class="bi bi-person-check"></i></div>
+                <h3>Identity checks</h3>
+                <p>Validate identity details against trusted data points before onboarding.</p>
+                <span>Individual KYC</span>
+              </article>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="150">
+              <article id="document-intelligence" class="suite-card">
+                <div class="suite-icon"><i class="bi bi-file-earmark-check"></i></div>
+                <h3>Document intelligence</h3>
+                <p>Extract useful fields, check consistency, and surface suspicious edits.</p>
+                <span>OCR · IDR · Tamper signals</span>
+              </article>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+              <article id="business-verification" class="suite-card">
+                <div class="suite-icon"><i class="bi bi-building-check"></i></div>
+                <h3>Business verification</h3>
+                <p>Understand the businesses, owners, and documents behind every application.</p>
+                <span>KYB · GST · CIN</span>
+              </article>
+            </div>
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="250">
+              <article id="risk-intelligence" class="suite-card">
+                <div class="suite-icon"><i class="bi bi-shield-exclamation"></i></div>
+                <h3>Risk intelligence</h3>
+                <p>Bring mismatches and unusual signals into focus for faster review.</p>
+                <span>Fraud signals · Risk review</span>
+              </article>
+            </div>
+          </div>
+          <div class="suite-bottom" data-aos="fade-up" data-aos-delay="300">
+            <div><i class="bi bi-plug"></i><strong>Designed for integration</strong><span>Connect checks to your existing portal, CRM, LOS, or internal tools.</span></div>
+            <a href="#contact" class="text-link">Discuss your workflow <i class="bi bi-arrow-up-right"></i></a>
+          </div>
+        </div>
+      </section>
+      <!-- /Solution Suite Section -->
+
+      <!-- Process Section -->
+      <section id="process" class="process section light-background">
+        <div class="container section-title" data-aos="fade-up">
+          <span class="eyebrow">A simpler path to trust</span>
+          <h2>Verification that works at every step</h2>
+          <p>From the first customer interaction to ongoing compliance, our platform keeps your process clear, fast, and ready to scale.</p>
+        </div>
+
+        <div class="container">
+          <div class="row gy-4 process-grid">
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="process-card">
+                <div class="process-number">01</div>
+                <div class="process-icon"><i class="bi bi-person-vcard"></i></div>
+                <h3>Collect</h3>
+                <p>Give customers a smooth onboarding experience with guided data and document collection across devices.</p>
+                <span class="process-tag">Frictionless onboarding</span>
+              </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="process-card featured-process">
+                <div class="process-number">02</div>
+                <div class="process-icon"><i class="bi bi-fingerprint"></i></div>
+                <h3>Verify</h3>
+                <p>Combine intelligent document checks, data matching, and fraud signals to make confident decisions.</p>
+                <span class="process-tag">Accurate decisions</span>
+              </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="process-card">
+                <div class="process-number">03</div>
+                <div class="process-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                <h3>Grow</h3>
+                <p>Connect results to your workflow, monitor risk, and scale trusted customer relationships with confidence.</p>
+                <span class="process-tag">Ready to scale</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Process Section -->
+
+      <!-- Why Intellica Section -->
+      <section id="why-intellica" class="why-intellica section">
+        <div class="container">
+          <div class="row align-items-center gy-5">
+            <div class="col-lg-5" data-aos="fade-right">
+              <span class="eyebrow">Confidence in every decision</span>
+              <h2>Technology that puts trust first.</h2>
+              <p>We bring together thoughtful design, intelligent automation, and dependable support so your team can focus on creating better customer experiences.</p>
+              <a href="#contact" class="btn-outline-custom">Talk to our team <i class="bi bi-arrow-up-right"></i></a>
+            </div>
+            <div class="col-lg-7" data-aos="fade-left">
+              <div class="benefit-grid">
+                <div class="benefit-item"><i class="bi bi-lock"></i><div><h3>Privacy-first</h3><p>Protect sensitive customer data with security woven into every workflow.</p></div></div>
+                <div class="benefit-item"><i class="bi bi-code-slash"></i><div><h3>API-ready</h3><p>Integrate the capabilities you need into the tools your team already uses.</p></div></div>
+                <div class="benefit-item"><i class="bi bi-speedometer2"></i><div><h3>Built to perform</h3><p>Move from manual checks to faster, more consistent verification decisions.</p></div></div>
+                <div class="benefit-item"><i class="bi bi-headset"></i><div><h3>Human support</h3><p>Partner with a responsive team that stays with you beyond launch day.</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Industries Section -->
+      <section id="industries" class="industries section light-background">
+        <div class="container">
+          <div class="row align-items-end gy-4 section-heading-row">
+            <div class="col-lg-7" data-aos="fade-right">
+              <span class="eyebrow">Made for real-world decisions</span>
+              <h2>Trust infrastructure for every kind of growth.</h2>
+            </div>
+            <div class="col-lg-5" data-aos="fade-left">
+              <p>Whether you are onboarding a customer, approving a loan, activating a merchant, or managing a workforce, Intellica helps your team move with clarity.</p>
+            </div>
+          </div>
+          <div class="row g-3 industry-list" data-aos="fade-up">
+            <div class="col-lg-6">
+              <div class="industry-item"><i class="bi bi-bank"></i><div><h3>Banking &amp; fintech</h3><p>Reduce onboarding friction while keeping risk visible.</p></div><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="col-lg-6">
+              <div class="industry-item"><i class="bi bi-cart3"></i><div><h3>Commerce &amp; marketplaces</h3><p>Know customers, sellers, and partners before they transact.</p></div><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="col-lg-6">
+              <div class="industry-item"><i class="bi bi-briefcase"></i><div><h3>Workforce &amp; HR</h3><p>Build dependable employee and contractor onboarding flows.</p></div><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+            <div class="col-lg-6">
+              <div class="industry-item"><i class="bi bi-heart-pulse"></i><div><h3>Insurance &amp; healthcare</h3><p>Verify people and documents with less manual follow-up.</p></div><i class="bi bi-arrow-up-right"></i></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Call To Action Section -->
+      <section class="cta-banner section dark-background" data-aos="zoom-in">
+        <div class="container position-relative">
+          <div class="row align-items-center gy-4">
+            <div class="col-lg-8">
+              <span class="eyebrow">Ready when you are</span>
+              <h2>Build a safer, smarter customer journey.</h2>
+              <p>Let’s turn your verification challenges into a competitive advantage.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+              <a href="#contact" class="btn-primary-custom">Start a conversation <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- /Features Section -->
 
@@ -973,6 +1182,6 @@
     <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
 
     <!-- Main JS File -->
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}?v=20260919"></script>
   </body>
 </html>
