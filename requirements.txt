@@ -44,3 +44,4 @@ fuzzywuzzy
 jellyfish
 gender-guesser
 whitenoise
+gunicorn
