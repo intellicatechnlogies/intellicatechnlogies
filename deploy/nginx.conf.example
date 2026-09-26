@@ -1,0 +1,28 @@
+# GCP HTTPS Load Balancer -> VM/Nginx (port 80) -> Gunicorn on 127.0.0.1:8000.
+# Restrict this VM's firewall so port 80 is reachable only from the trusted load balancer.
+upstream intellica_gunicorn {
+    server 127.0.0.1:8000;
+    keepalive 16;
+}
+
+server {
+    listen 80;
+    server_name your-domain.example.com;
+
+    # Face-comparison uploads may contain multiple images (Django allows up to 75 MiB).
+    client_max_body_size 80m;
+
+    location / {
+        proxy_pass http://intellica_gunicorn;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # The trusted GCP HTTPS Load Balancer supplies this header.
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        proxy_set_header Connection "";
+        proxy_connect_timeout 10s;
+        proxy_send_timeout 200s;
+        proxy_read_timeout 200s;
+    }
+}

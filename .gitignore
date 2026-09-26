@@ -1,47 +1,49 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# # Byte-compiled / optimized / DLL files
+# __pycache__/
+# *.py[cod]
+# *$py.class
 
-# C extensions
-*.so
+# # C extensions
+# *.so
 
-# Django stuff:
-*.log
-*.pot
-*.pyc
-*.pyo
-*.pyd
-#db.sqlite3
-#*.sqlite3
-media
-staticfiles
-static/
+# # Django stuff:
+# *.log
+# *.pot
+# *.pyc
+# *.pyo
+# *.pyd
+# db.sqlite3
+# *.sqlite3
+# media
+# staticfiles
+# static/
 
-# Virtual environment
-venv/
-env/
-.venv/
-.env/
+# # Virtual environment
+# venv/
+# env/
+# .venv/
+# .env/
+# .env
+# .env.*
+# !.env.example
 
-# Docker
-*.log
-docker-compose.override.yml
-.dockerignore
+# # Docker
+# *.log
+# docker-compose.override.yml
 
-# Testing results
-.coverage
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# # Testing results
+# .coverage
+# *.cover
+# *.py,cover
+# .hypothesis/
+# .pytest_cache/
 
-# Editor / IDE files
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
+# # Editor / IDE files
+# .vscode/
+# .idea/
+# *.sublime-project
+# *.sublime-workspace
 
-# files not be to pushed
-*.pyc
-__pycache__
+# # files not be to pushed
+# *.pyc
+# __pycache__
