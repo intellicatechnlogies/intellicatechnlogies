@@ -1,0 +1,28 @@
+<form class="auth-form" id="login-form" method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  <div class="auth-field">
+    <label for="loginid">Username</label>
+    <input id="loginid" name="loginid" type="text" autocomplete="username" placeholder="Enter your username" required>
+  </div>
+  <div class="auth-field">
+    <label for="psw">Password</label>
+    <div class="password-control">
+      <input id="psw" name="psw" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+      <button class="password-toggle" type="button" data-password-toggle aria-label="Show password"><i class="bi bi-eye"></i></button>
+    </div>
+  </div>
+  <div class="captcha-panel">
+    <div class="captcha-heading">
+      <label for="captcha-answer">Quick security check</label>
+      <button class="captcha-refresh" type="button" data-captcha-refresh data-captcha-refresh-url="{% url 'login_captcha' %}" aria-label="Get a new CAPTCHA question" title="Get a new question">
+        <i class="bi bi-arrow-clockwise"></i><span>New question</span>
+      </button>
+    </div>
+    <div class="captcha-question" data-captcha-question>{{ captcha_question }}</div>
+    <input id="captcha-answer" name="captcha_answer" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Your answer" aria-label="CAPTCHA answer" required>
+  </div>
+  <p class="auth-feedback" data-login-feedback role="status" aria-live="polite">{% if error %}{{ error }}{% endif %}</p>
+  <button class="auth-submit" type="submit">
+    <span data-submit-label>Sign in securely</span><i class="bi bi-arrow-right"></i>
+  </button>
+</form>

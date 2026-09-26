@@ -5,7 +5,6 @@ from django.http                            import HttpResponseRedirect, JsonRes
 from django.shortcuts                       import render
 from django.views.decorators.cache          import never_cache
 from django.views.decorators.http           import require_http_methods
-from pytz                                   import timezone
 from random                                 import getrandbits
 from IntellicaTechnologies.decorators       import validate_credential
 from json                                   import dumps as dump_as_JSON
@@ -21,6 +20,11 @@ from Services.models                        import service_result
 @validate_credential
 @csrf_exempt
 def get_request_list(request):
-    login_id = request.data.get('login_id')
+    session_user = getattr(request, "login_user", None)
+    login_id = (
+        request.session.get("login_id")
+        if session_user
+        else request.data.get('login_id')
+    )
     sr_result=service_result.objects.filter(login_id=login_id).order_by('-timestamp').values("Application_number","State","request_id","service_name","billable","timestamp")
     return Response(data=sr_result, status=HTTP_200_OK)

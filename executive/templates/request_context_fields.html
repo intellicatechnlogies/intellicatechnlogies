@@ -1,0 +1,23 @@
+<fieldset class="request-context-fieldset">
+  <legend>Application Details</legend>
+  <div class="request-context-grid">
+    <div class="request-context-field">
+      <label for="application-number-{{ form_key }}">Application number</label>
+      <input id="application-number-{{ form_key }}" name="application_number" type="text" maxlength="75" placeholder="Enter your application/reference number" required>
+    </div>
+    <div class="request-context-field">
+      <label for="request-state-{{ form_key }}">State / Union Territory</label>
+      <select id="request-state-{{ form_key }}" name="state" required>
+        <option value="" selected disabled>Select a state or union territory</option>
+        {% for state in states %}<option value="{{ state }}">{{ state }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="request-context-field">
+      <label for="request-product-{{ form_key }}">Product</label>
+      <select id="request-product-{{ form_key }}" name="product" required>
+        <option value="" selected disabled>Select a product</option>
+        {% for product in products %}<option value="{{ product }}">{{ product }}</option>{% endfor %}
+      </select>
+    </div>
+  </div>
+</fieldset>

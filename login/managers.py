@@ -1,7 +1,6 @@
 from datetime                     import datetime as dt
 from django.db                    import models
 from munch                        import Munch
-from pytz                         import timezone
 from random                       import choices as randomChoices
 from string                       import ascii_letters, digits
 from argon2            import hash_password_raw, low_level as hash_algo
@@ -9,7 +8,9 @@ from binascii          import hexlify
 from base64            import b64decode, b64encode
 
 
-# Argon2 Hasher 
+# Argon2 Hasher used by legacy account records. New passwords use Django's
+# password hashing framework; this constant is retained only for migration.
+LEGACY_PASSWORD_SALT = "KDRaFnKRMYuZPnsJkyBJ52uB9MDosi9H5a4LvPGwIbdQI1tj7UurwJ0iingDpjBxJQEMpdcPCauF8VFwKDO46H87f4OMpOl3NUreSbqwwdrguigmoqlJJe0LQNoG3dkb"
 get_hash = lambda message, salt: hexlify(hash_password_raw(time_cost=16, memory_cost=1024, parallelism=2, hash_len=64, password=message.encode(), salt=salt.encode(), type=hash_algo.Type.ID)).decode()
 
 class AccountNotExistException(Exception):
@@ -83,7 +84,7 @@ class UserDataManager(models.Manager):
                         email_address  = email_address,
                         login_id       = created_login_id,
                         office_address = office_address,
-                        password       = get_hash(message=raw_password, salt="KDRaFnKRMYuZPnsJkyBJ52uB9MDosi9H5a4LvPGwIbdQI1tj7UurwJ0iingDpjBxJQEMpdcPCauF8VFwKDO46H87f4OMpOl3NUreSbqwwdrguigmoqlJJe0LQNoG3dkb"),
+                        password       = get_hash(message=raw_password, salt=LEGACY_PASSWORD_SALT),
                         permissions    = {},
                         session_info   = {},
                         state          = state,

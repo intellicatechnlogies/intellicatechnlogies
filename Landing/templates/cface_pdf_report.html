@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Intellica Technologies Verification Report</title>
+  <style>
+    @page { size: A4; margin: 15mm 14mm 17mm; }
+    * { box-sizing: border-box; }
+    body { position: relative; margin: 0; color: #242832; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; }
+    body:before { position: fixed; z-index: -1; top: 27%; left: 15%; width: 70%; height: 48%; background: url("{{ logo_uri }}") center / contain no-repeat; content: ""; opacity: .16; }
+    .cover { min-height: 264mm; page-break-after: always; }
+    .brand { padding-top: 1mm; text-align: center; }
+    .brand h1 { margin: 0 0 5mm; color: #08085f; font-size: 21pt; font-weight: 700; }
+    .brand img { display: block; width: 88px; height: 88px; margin: 0 auto 8mm; object-fit: contain; }
+    .brand .subtitle { display: none; }
+    .section-title { margin: 5mm 0 0; padding: 5px 7px; border: 1px solid #15156f; color: #fff; background: #08085f; font-size: 10pt; font-weight: 700; text-align: center; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .details td, .input-details td { padding: 4px 6px; border: 1px solid #969ba6; vertical-align: top; }
+    .details td:first-child, .input-details td:first-child { width: 38%; font-weight: 700; }
+    .service-banner { display: table; width: 100%; margin-bottom: 5mm; border: 1px solid #0d1453; color: #fff; background: #08085f; }
+    .service-name, .service-date { display: table-cell; padding: 7px 9px; vertical-align: middle; }
+    .service-name { font-size: 13pt; font-weight: 700; }
+    .service-date { width: 45%; background: #1d47c7; text-align: right; font-size: 8pt; }
+    .report-label { margin: 0 0 4mm; color: #333; font-size: 9pt; font-weight: 700; }
+    .summary { margin-top: 3mm; }
+    .summary td { width: 25%; padding: 7px 4px; border: 1px solid #969ba6; text-align: center; }
+    .summary strong { display: block; color: #11115d; font-size: 15pt; }
+    .summary span { display: block; padding-top: 2px; color: #515665; font-size: 7pt; }
+    .pair { display: table; width: 100%; margin: 0 0 7px; border: 1px solid #727887; page-break-inside: avoid; }
+    .pair-image, .pair-score { display: table-cell; padding: 5px; vertical-align: middle; }
+    .pair-image { width: 41%; text-align: center; }
+    .pair-image img { display: block; width: 100%; height: 105px; border: 1px solid #d4d7de; object-fit: contain; }
+    .pair-image span { display: block; padding-top: 3px; color: #303746; font-size: 7pt; font-weight: 700; }
+    .pair-score { width: 18%; color: #11115d; text-align: center; }
+    .pair-score strong { display: block; font-size: 13pt; }
+    .pair-score span { display: inline-block; margin-top: 5px; padding: 3px 6px; border: 1px solid #969cad; color: #303746; font-size: 7pt; font-weight: 700; }
+    .empty { padding: 14px; border: 1px solid #c6cad2; color: #626979; text-align: center; }
+    footer { position: fixed; right: 0; bottom: -9mm; left: 0; padding: 5px; color: #fff; background: #29145f; font-size: 8pt; font-weight: 700; text-align: center; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <header class="brand">
+      <h1>Intellica Technologies Verification Report</h1>
+      {% if logo_uri %}<img src="{{ logo_uri }}" alt="Intellica Technologies logo">{% endif %}
+    </header>
+
+    <div class="section-title">Verifier Details</div>
+    <table class="details">
+      <tbody>
+        <tr><td>Login id</td><td>{{ verifier.login_id|default:"—" }}</td></tr>
+        <tr><td>User name</td><td>{{ verifier.user_name|default:"—" }}</td></tr>
+        <tr><td>Application number</td><td>{{ verifier.application_number|default:transaction_id }}</td></tr>
+        <tr><td>State</td><td>{{ verifier.state|default:"—" }}</td></tr>
+        <tr><td>Product</td><td>{{ verifier.product|default:"Face Comparison" }}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="service-report">
+    <div class="service-banner">
+      <div class="service-name">{{ verifier.product|default:"FACE COMPARISON" }}</div>
+      <div class="service-date">Verification Report&nbsp;&nbsp; {{ generated_at }}</div>
+    </div>
+    <p class="report-label">Input</p>
+    <table class="input-details">
+      <tbody>
+        <tr><td>Application number</td><td>{{ verifier.application_number|default:transaction_id }}</td></tr>
+        <tr><td>State / Union Territory</td><td>{{ verifier.state|default:"—" }}</td></tr>
+        <tr><td>Product</td><td>{{ verifier.product|default:"Face Comparison" }}</td></tr>
+        <tr><td>Transaction id</td><td>{{ transaction_id }}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Overall Comparison Details</div>
+    <table class="summary">
+      <tr>
+        <td><strong>{{ overview.NUM_IMG|default:"0" }}</strong><span>Images compared</span></td>
+        <td><strong>{{ overview.MATCH|default:"0" }}</strong><span>Matches</span></td>
+        <td><strong>{{ overview.NO_MATCH|default:"0" }}</strong><span>No match</span></td>
+        <td><strong>{{ overview.INVALID|default:"0" }}</strong><span>Invalid</span></td>
+      </tr>
+    </table>
+
+    <div class="section-title">Image-wise Match Results</div>
+    {% for pair in pairs %}
+      <section class="pair">
+        <div class="pair-image">
+          {% if pair.SRC_IMAGE_URI %}<img src="{{ pair.SRC_IMAGE_URI }}" alt="{{ pair.SRC_TITLE }}">{% endif %}
+          <span>{{ pair.SRC_TITLE }}</span>
+        </div>
+        <div class="pair-score">
+          <strong>{{ pair.PERCENT }}%</strong>
+          <span>{{ pair.FLAG }}</span>
+        </div>
+        <div class="pair-image">
+          {% if pair.TRGT_IMAGE_URI %}<img src="{{ pair.TRGT_IMAGE_URI }}" alt="{{ pair.TRGT_TITLE }}">{% endif %}
+          <span>{{ pair.TRGT_TITLE }}</span>
+        </div>
+      </section>
+    {% empty %}
+      <div class="empty">No image-pair results are available for this transaction.</div>
+    {% endfor %}
+  </section>
+
+  <footer>Verified by Intellica Technologies (Web Application)</footer>
+</body>
+</html>

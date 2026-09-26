@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from Landing.views import landing
-from login.views import *
+from login.views import LoginUser, LogoutUser, refresh_login_captcha
 from executive.views import *
 from Api.login     import *
 from Api.kyc       import *
@@ -29,9 +29,11 @@ from Api.data_insert import data_insert
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
-    path('',landing),
-    path('login',LoginUser),
-    path('home',Home),
+    path('',landing, name='landing'),
+    path('login',LoginUser, name='login'),
+    path('login/captcha',refresh_login_captcha, name='login_captcha'),
+    path('logout',LogoutUser, name='logout'),
+    path('home',Home, name='home'),
     path('login_api',login),
     path('pan',pan_kyc),
     path('cface',compareFace),

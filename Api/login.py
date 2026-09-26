@@ -5,7 +5,6 @@ from django.http                            import HttpResponseRedirect, JsonRes
 from django.shortcuts                       import render
 from django.views.decorators.cache          import never_cache
 from django.views.decorators.http           import require_http_methods
-from pytz                                   import timezone
 from random                                 import getrandbits
 from IntellicaTechnologies.decorators       import validate_credential
 import requests
@@ -18,17 +17,16 @@ from json                                   import dumps as dump_as_JSON
 from munch                                  import Munch
 from django.views.decorators.csrf           import csrf_exempt
 from rest_framework.decorators              import api_view
-from login.models                           import users
+from login.authentication                   import get_api_user_for_login, verify_user_password
 
 
 def loginValidate(login_id,pwd):
-     if users.objects.filter(login_id=login_id):
-          if users.objects.filter(login_id=login_id,password=pwd):
-               return True,"Success"
-          else:
-               return False,"Password is incorrect"
-     else:
+     user = get_api_user_for_login(login_id)
+     if not user:
           return False, "Incorrect User id"
+     if verify_user_password(user, pwd):
+          return True,"Success"
+     return False,"Password is incorrect"
 
 @api_view(["POST","OPTIONS"])
 @validate_credential

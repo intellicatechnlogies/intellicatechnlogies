@@ -180,3 +180,6 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Face comparison accepts up to ten base64-encoded images (5 MB each).
+DATA_UPLOAD_MAX_MEMORY_SIZE = 75 * 1024 * 1024
+

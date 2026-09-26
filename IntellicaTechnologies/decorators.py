@@ -5,11 +5,19 @@ from threading               import Thread
 from rest_framework.response import Response
 from rest_framework.status   import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN, HTTP_429_TOO_MANY_REQUESTS
 from Api.models              import apiUser
+from login.views             import require_login
 
 
 def validate_credential(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
+        # Browser users authenticate with their Django session; API clients
+        # continue to authenticate with their API key and application ID.
+        session_user = require_login(request)
+        if session_user:
+            request.login_user = session_user
+            return view_func(request, *args, **kwargs)
+
         API_KEY = request.META.get("HTTP_API_KEY")
         APP_ID  = request.META.get("HTTP_APP_ID")
         response_model = {}
@@ -36,18 +44,17 @@ def validate_credential(view_func):
 
 
 def login_required(function):
-	"""
-	@login_required\
-	def function_name(request):
-		#do_stuff
-	"""
-	# def wrapped(request, *args, **kwargs):
-	# 	# # If Unique ID and Login ID are authenticated...
-	# 	# if "login_id" in request.session.keys() and users.objects.is_session_active(LOGIN_ID=request.session["login_id"]):
-	# 	# 	if "logged_in" in request.session.keys() and request.session["logged_in"]=="T":
-	# 	# 		return function(request, *args, **kwargs)
-	# 	# return HttpResponseRedirect('/login')
+    """Require an interactive user session for internal web-only views."""
+    @wraps(function)
+    def wrapped(request, *args, **kwargs):
+        if not require_login(request):
+            return Response(
+                data={
+                    "response_code": "401",
+                    "response_message": "Login required",
+                },
+                status=HTTP_401_UNAUTHORIZED,
+            )
+        return function(request, *args, **kwargs)
 
-    # wrapped.__doc__  = function.__doc__
-	# wrapped.__name__ = function.__name__
-	# return wrapped
+    return wrapped
