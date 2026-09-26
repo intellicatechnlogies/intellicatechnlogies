@@ -38,6 +38,7 @@
 
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
     <!-- <link href="css/main.css" rel="stylesheet" /> -->
   </head>
 
@@ -55,6 +56,7 @@
           <span>.</span>
         </a>
 
+        <div class="header-actions">
         <nav id="navmenu" class="navmenu">
           <ul>
             <li><a href="#hero" class="active">Home</a></li>
@@ -107,9 +109,22 @@
           <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
 
-        <!-- <a class="btn-getstarted" href="index.html#about">Get Started</a> -->
+        <button class="btn-getstarted" type="button" data-login-open>Login</button>
+        </div>
       </div>
     </header>
+
+    <dialog class="auth-dialog" id="login-dialog" aria-labelledby="login-title">
+      <section class="auth-card">
+        <button class="auth-close" type="button" data-login-close aria-label="Close login">&times;</button>
+        <div class="auth-brand-mark"><i class="bi bi-shield-lock"></i></div>
+        <p class="auth-eyebrow">INTELLICA SECURE ACCESS</p>
+        <h2 id="login-title">Welcome back</h2>
+        <p class="auth-intro">Sign in to continue to your verification workspace.</p>
+        {% include "login_form.html" %}
+        <p class="auth-footnote"><i class="bi bi-lock-fill"></i> Your sign-in is protected and encrypted.</p>
+      </section>
+    </dialog>
 
     <main class="main">
       <!-- Hero Section -->
@@ -1183,5 +1198,6 @@
 
     <!-- Main JS File -->
     <script src="{% static 'js/main.js' %}?v=20260919"></script>
+    <script src="{% static 'js/auth.js' %}"></script>
   </body>
 </html>

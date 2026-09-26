@@ -45,6 +45,7 @@ class users(models.Model):
     incorrect_password_count = models.IntegerField(default=0)
     objects = activeSessionsManager()
 
+
 class request_process(models.Model):
     sno              = models.AutoField(primary_key=True, null=False, blank=False)
     login_id         = models.CharField(max_length=15, default="1901000000", null=False, blank=False)

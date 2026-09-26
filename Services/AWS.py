@@ -15,7 +15,7 @@ from string      import ascii_letters, digits
 from uuid        import uuid1
 from Services.TransactionLog  import TransactionLog
 from datetime                               import datetime as dt
-from pytz                                   import timezone
+from zoneinfo                               import ZoneInfo
 from IntellicaTechnologies.config import Config
 
 configObj  = Config()
@@ -75,6 +75,8 @@ def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
             )
             
             faceMatch       = response['FaceMatches']
+            if not faceMatch:
+                return (key, 0.0, "NOMATCH", sourceimgstring, targetimgstring)
             matchSimilarity = round(float(faceMatch[0]['Similarity']), 3)
 
             if matchSimilarity >= 60:
@@ -93,11 +95,12 @@ def CompareFaces(sourceimgstring: str, targetimgstring: str, key=None, sim=0):
 
             return (key, matchSimilarity, "SERVICE_DOWN", sourceimgstring, targetimgstring)
 
-def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
+def getCompareFaces(image_data,service,transaction,api_mode:False,service_type,request_context=None):
     userId=1111
     if "userId" in image_data.keys():
         userId=image_data['userId']
         del image_data['userId']
+    request_context = request_context or {}
     image_titles = list(image_data)
 
     imagePairs   = [(a, b) for idx, a in enumerate(image_titles) for b in image_titles[idx + 1:]]
@@ -109,8 +112,13 @@ def getCompareFaces(image_data,service,transaction,api_mode:False,service_type):
         response_data={}
         for pair in imagePairs:
             timestamp=int(dt.timestamp(
-                dt.now(timezone("Asia/Kolkata")))*1000000)
-            TransactionLog.createTransactionLog(transaction,service,userId,True,"101",timestamp,response_data)
+                dt.now(ZoneInfo("Asia/Kolkata")))*1000000)
+            TransactionLog.createTransactionLog(
+                transaction, service, userId, True, "101", timestamp, response_data,
+                application_no=request_context.get("application_number", "Test"),
+                product=request_context.get("product", "Test"),
+                state=request_context.get("state", "Test"),
+            )
             futures.append(
                 executor.submit(
                     CompareFaces, 
@@ -279,7 +287,8 @@ def download_pdf_from_s3(s3_file_name, service="IDR"):
         pdf_base64_string = b64encode(s3_resource().Object(bucket, s3_file_name).get()['Body'].read()).decode("utf-8")
         return (True, pdf_base64_string)
     except botocore_exceptions.ClientError as ex:
-        if ex.response['Error']['Code'] == "404":
+        error_code = str(ex.response.get("Error", {}).get("Code", ""))
+        if error_code in {"404", "NoSuchKey", "NotFound"}:
             # The object does not exist.
             return (False, 404)
         else:

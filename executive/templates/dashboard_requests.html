@@ -1,0 +1,18 @@
+<div class="table-scroll">
+  <table class="requests-table">
+    <thead><tr><th>REQUEST</th><th>SERVICE</th><th>APPLICATION</th><th>STATUS</th><th>DATE</th></tr></thead>
+    <tbody>
+      {% for item in request_items %}
+      <tr data-history-row>
+        <td><span class="request-id">{{ item.request_id }}</span></td>
+        <td>{{ item.service_name }}</td>
+        <td>{{ item.Application_number }}</td>
+        <td><span class="status-pill status-complete">Logged</span></td>
+        <td>{{ item.timestamp }}</td>
+      </tr>
+      {% empty %}
+      <tr class="empty-row"><td colspan="5"><span class="empty-icon"><i class="bi bi-inbox"></i></span><strong>No verifications yet</strong><span>Run your first check to see it here.</span></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

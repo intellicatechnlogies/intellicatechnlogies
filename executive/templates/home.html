@@ -1,1 +1,210 @@
-<h1> Welcome</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Workspace | Intellica Technologies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  </head>
+  <body class="workspace-body">
+    <div class="workspace-shell">
+      <aside class="workspace-sidebar" id="workspace-sidebar">
+        <a class="workspace-brand" href="{% url 'home' %}" aria-label="Intellica workspace home">
+          <span class="brand-icon"><i class="bi bi-shield-lock"></i></span>
+          <span class="brand-copy"><strong>Intellica</strong><small>IDENTITY · TRUST · SPEED</small></span>
+        </a>
+
+        <nav class="side-navigation" aria-label="Workspace navigation">
+          <p class="nav-section-label">VERIFY</p>
+          <button class="side-link is-active" type="button" data-dashboard-view="overview"><i class="bi bi-grid-1x2"></i><span>Overview</span></button>
+          <button class="side-link" type="button" data-dashboard-view="verify"><i class="bi bi-file-earmark-check"></i><span>KYC Verification</span><i class="bi bi-chevron-right side-chevron"></i></button>
+          <button class="side-link" type="button" data-dashboard-view="history"><i class="bi bi-clock-history"></i><span>KYC History</span></button>
+          <button class="side-link" type="button" data-dashboard-view="idr"><i class="bi bi-files"></i><span>IDR Services</span></button>
+          <button class="side-link" type="button" data-dashboard-view="idr-history"><i class="bi bi-arrow-counterclockwise"></i><span>IDR History</span></button>
+
+          <p class="nav-section-label nav-section-spaced">WORKSPACE</p>
+          <button class="side-link" type="button" data-dashboard-view="overview"><i class="bi bi-kanban"></i><span>Workspace overview</span></button>
+          <button class="side-link" type="button" data-dashboard-view="history"><i class="bi bi-check2-square"></i><span>Verifications</span></button>
+          <button class="side-link" type="button" data-dashboard-view="api-keys"><i class="bi bi-key"></i><span>API Keys</span></button>
+          <button class="side-link" type="button" data-dashboard-view="billing"><i class="bi bi-credit-card"></i><span>Billing</span></button>
+          <button class="side-link" type="button" data-dashboard-view="audit"><i class="bi bi-list-check"></i><span>Audit Logs</span></button>
+          <button class="side-link" type="button" data-dashboard-view="settings"><i class="bi bi-gear"></i><span>Settings</span></button>
+        </nav>
+
+        <div class="sidebar-account">
+          <span class="account-avatar">{{ user.user_name|first|upper }}</span>
+          <span class="account-copy"><strong>{{ user.user_name }}</strong><small>{{ client_name }}</small></span>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="icon-button logout-button" type="submit" aria-label="Log out" title="Log out"><i class="bi bi-box-arrow-right"></i></button>
+          </form>
+        </div>
+      </aside>
+
+      <main class="workspace-main">
+        <header class="workspace-topbar">
+          <button class="icon-button mobile-menu-button" type="button" data-sidebar-toggle aria-label="Open navigation"><i class="bi bi-list"></i></button>
+          <label class="workspace-search"><i class="bi bi-search"></i><input type="search" placeholder="Search requests, e.g. KYC-20260912…" aria-label="Search requests" data-history-search></label>
+          <div class="topbar-actions">
+            <a class="view-site-link" href="{% url 'landing' %}">View site <i class="bi bi-box-arrow-up-right"></i></a>
+            <button class="icon-button notification-button" type="button" aria-label="Notifications"><i class="bi bi-bell"></i><span></span></button>
+            <span class="topbar-avatar">{{ user.user_name|first|upper }}</span>
+            <strong class="topbar-username">{{ user.user_name }}</strong>
+          </div>
+        </header>
+
+        <div class="workspace-content">
+          <section class="dashboard-view" data-view-panel="overview">
+            <div class="page-heading overview-heading">
+              <div><p class="eyebrow">YOUR WORKSPACE</p><h1>Welcome back, {{ user.user_name }}</h1><p>Here’s what’s happening across your verification workspace.</p></div>
+              <button class="button button-primary" type="button" data-dashboard-view="verify"><i class="bi bi-plus-lg"></i> New verification</button>
+            </div>
+            <div class="workspace-notice"><i class="bi bi-info-circle"></i><span>Your workspace is ready. Start a verification to see activity here.</span><button type="button" aria-label="Dismiss message" data-dismiss-notice>&times;</button></div>
+            <div class="metric-grid">
+              <article class="metric-card"><div class="metric-label"><span>KYC REQUESTS</span><i class="bi bi-person-vcard"></i></div><strong>{{ kyc_requests }}</strong><p>in your workspace</p></article>
+              <article class="metric-card"><div class="metric-label"><span>IDR COMPARISONS</span><i class="bi bi-files"></i></div><strong>{{ idr_requests }}</strong><p>across your requests</p></article>
+              <article class="metric-card"><div class="metric-label"><span>ITEMS VERIFIED</span><i class="bi bi-patch-check"></i></div><strong>{{ total_requests }}</strong><p>total requests</p></article>
+              <article class="metric-card"><div class="metric-label"><span>PROCESSING NOW</span><i class="bi bi-lightning-charge"></i></div><strong>0</strong><p>across all services</p></article>
+            </div>
+            <div class="overview-lower-grid">
+              <section class="panel recent-panel">
+                <div class="panel-heading"><div><h2>Recent verifications</h2><p>Your latest service requests</p></div><button class="text-button" type="button" data-dashboard-view="history">View all <i class="bi bi-arrow-right"></i></button></div>
+                {% include "dashboard_requests.html" with request_items=recent_requests %}
+              </section>
+              <aside class="getting-started-card"><span class="getting-started-icon"><i class="bi bi-stars"></i></span><p class="eyebrow">GETTING STARTED</p><h2>Run your first identity check</h2><p>Verify PAN details, compare names, or check address similarity from one secure workspace.</p><button class="button button-light" type="button" data-dashboard-view="verify">Open KYC Verification <i class="bi bi-arrow-right"></i></button></aside>
+            </div>
+            <section class="quick-integration panel"><div><p class="eyebrow">QUICK INTEGRATION</p><h2>Already have an application?</h2><p>Connect your systems to Intellica verification APIs.</p></div><button class="button button-secondary" type="button" data-dashboard-view="api-keys">Explore API access <i class="bi bi-arrow-right"></i></button></section>
+          </section>
+
+          <section class="dashboard-view" data-view-panel="verify" hidden>
+            <div class="page-heading">
+              <div><p class="eyebrow">VERIFY</p><h1>KYC Verification</h1><p>Select a service to verify identity information. Each available check runs independently.</p></div>
+              <button class="button button-secondary" type="button" data-dashboard-view="history"><i class="bi bi-clock-history"></i> View history</button>
+            </div>
+            <div class="service-workspace panel">
+              <div class="service-grid" role="group" aria-label="Choose a verification service">
+                <button class="service-option" type="button" data-service="pan" aria-pressed="false"><span class="service-icon blue"><i class="bi bi-credit-card-2-front"></i></span><span class="service-title">PAN Verification</span><span class="service-description">Verify PAN details securely.</span><span class="service-select-label">Click to select <i class="bi bi-circle"></i></span><span class="service-status available">Available</span></button>
+                <button class="service-option" type="button" data-service="name" aria-pressed="false"><span class="service-icon violet"><i class="bi bi-person-check"></i></span><span class="service-title">Name Match</span><span class="service-description">Compare two names for a match.</span><span class="service-select-label">Click to select <i class="bi bi-circle"></i></span><span class="service-status available">Available</span></button>
+                <button class="service-option" type="button" data-service="address" aria-pressed="false"><span class="service-icon teal"><i class="bi bi-geo-alt"></i></span><span class="service-title">Address Match</span><span class="service-description">Compare two addresses.</span><span class="service-select-label">Click to select <i class="bi bi-circle"></i></span><span class="service-status available">Available</span></button>
+                <article class="service-option is-disabled"><span class="service-icon rose"><i class="bi bi-fingerprint"></i></span><span class="service-title">Aadhaar Verification</span><span class="service-description">Verify Aadhaar identity information.</span><span class="service-select-label">More services coming soon <i class="bi bi-hourglass-split"></i></span><span class="service-status coming-soon">Coming soon</span></article>
+                <article class="service-option is-disabled"><span class="service-icon amber"><i class="bi bi-person-badge"></i></span><span class="service-title">Voter ID Verification</span><span class="service-description">Verify voter identity details.</span><span class="service-select-label">More services coming soon <i class="bi bi-hourglass-split"></i></span><span class="service-status coming-soon">Coming soon</span></article>
+                <article class="service-option is-disabled"><span class="service-icon slate"><i class="bi bi-car-front"></i></span><span class="service-title">Driving License</span><span class="service-description">Verify driving license details.</span><span class="service-select-label">More services coming soon <i class="bi bi-hourglass-split"></i></span><span class="service-status coming-soon">Coming soon</span></article>
+              </div>
+              <div class="service-selection-bar"><div><span class="selection-check"><i class="bi bi-list-check"></i></span><span><strong>Selected service:</strong> <span data-selected-label>None</span></span></div><button class="button button-primary" type="button" data-continue-service disabled>Continue <i class="bi bi-arrow-right"></i></button></div>
+            </div>
+
+            <section class="service-form-panel panel" data-service-form-panel hidden>
+              <div class="panel-heading"><div><p class="eyebrow">NEW REQUEST</p><h2 data-form-title>Verification details</h2><p data-form-description>Enter the details to run this verification.</p></div><button class="icon-button" type="button" data-back-to-services aria-label="Back to services"><i class="bi bi-x-lg"></i></button></div>
+              <form class="service-request-form" data-service-form="pan" data-endpoint="/pan" hidden>
+                {% include "request_context_fields.html" with form_key="pan" %}
+                <label for="pan-number">PAN number</label><input id="pan-number" name="pan_number" type="text" maxlength="10" placeholder="ABCDE1234F" autocapitalize="characters" required>
+                <p class="field-hint">Enter the 10-character PAN you want to verify.</p>
+                <button class="button button-primary" type="submit">Run PAN verification <i class="bi bi-arrow-right"></i></button>
+              </form>
+              <form class="service-request-form" data-service-form="name" data-endpoint="/nameMatch" hidden>
+                {% include "request_context_fields.html" with form_key="name" %}
+                <label for="name-one">First name</label><input id="name-one" name="name1" type="text" placeholder="Enter first name" required>
+                <label for="name-two">Second name</label><input id="name-two" name="name2" type="text" placeholder="Enter second name" required>
+                <p class="field-hint">The service compares the names and returns a similarity score.</p>
+                <button class="button button-primary" type="submit">Compare names <i class="bi bi-arrow-right"></i></button>
+              </form>
+              <form class="service-request-form" data-service-form="address" data-endpoint="/distanceMap" hidden>
+                {% include "request_context_fields.html" with form_key="address" %}
+                <label for="address-one">First address</label><textarea id="address-one" name="address1" rows="3" placeholder="Enter first address" required></textarea>
+                <label for="address-two">Second address</label><textarea id="address-two" name="address2" rows="3" placeholder="Enter second address" required></textarea>
+                <p class="field-hint">The service compares the addresses and returns a similarity result.</p>
+                <button class="button button-primary" type="submit">Compare addresses <i class="bi bi-arrow-right"></i></button>
+              </form>
+              <div class="service-result" data-service-result hidden><div class="result-heading"><i class="bi bi-check-circle"></i><strong>Service response</strong><button class="text-button" type="button" data-clear-result>Clear</button></div><pre data-result-content></pre></div>
+              <p class="service-error" data-service-error role="alert" hidden></p>
+            </section>
+          </section>
+
+          <section class="dashboard-view" data-view-panel="history" hidden>
+            <div class="page-heading"><div><p class="eyebrow">ACTIVITY</p><h1>KYC History</h1><p>Review service requests submitted from your account.</p></div><button class="button button-secondary" type="button" data-refresh-history><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
+            <section class="panel history-panel"><div class="panel-heading"><div><h2>All requests</h2><p>Newest requests appear first.</p></div><span class="request-count">{{ total_requests }} total</span></div><div data-history-table>{% include "dashboard_requests.html" with request_items=all_requests %}</div></section>
+          </section>
+
+          <section class="dashboard-view" data-view-panel="idr" hidden>
+            <div class="page-heading"><div><p class="eyebrow">DOCUMENT INTELLIGENCE</p><h1>IDR Services</h1><p>Image and document intelligence services available through your account.</p></div></div>
+            <section class="panel face-compare-panel">
+              <div class="face-compare-heading">
+                <span class="service-icon blue"><i class="bi bi-person-bounding-box"></i></span>
+                <div><p class="eyebrow">FACE SERVICES</p><h2>Document-to-live face comparison</h2><p>Select the document types you want to compare. A live image is required.</p></div>
+                <span class="service-status available">Secure comparison</span>
+              </div>
+              <form class="face-compare-form" data-face-compare-form>
+                {% csrf_token %}
+                {% include "request_context_fields.html" with form_key="face" %}
+                <fieldset class="document-toggle-fieldset">
+                  <legend>Choose one or more document photos</legend>
+                  <p class="field-hint">Select any document types and upload one or more images for each. Every selected image is compared with the others and the required live image.</p>
+                  <div class="document-toggle-grid">
+                    <label class="document-toggle"><input type="checkbox" data-document-toggle="PAN_INPUT"><span class="toggle-track"><i></i></span><span><strong>PAN</strong><small>One or more PAN photos</small></span><i class="bi bi-credit-card-2-front document-type-icon"></i></label>
+                    <label class="document-toggle"><input type="checkbox" data-document-toggle="AADHAAR_INPUT"><span class="toggle-track"><i></i></span><span><strong>Aadhaar</strong><small>One or more Aadhaar photos</small></span><i class="bi bi-fingerprint document-type-icon"></i></label>
+                    <label class="document-toggle"><input type="checkbox" data-document-toggle="VOTER_INPUT"><span class="toggle-track"><i></i></span><span><strong>Voter ID</strong><small>One or more voter photos</small></span><i class="bi bi-person-vcard document-type-icon"></i></label>
+                    <label class="document-toggle"><input type="checkbox" data-document-toggle="DL_INPUT"><span class="toggle-track"><i></i></span><span><strong>Driving licence</strong><small>One or more licence photos</small></span><i class="bi bi-car-front document-type-icon"></i></label>
+                    <label class="document-toggle"><input type="checkbox" data-document-toggle="PASSPORT_INPUT"><span class="toggle-track"><i></i></span><span><strong>Passport</strong><small>One or more passport photos</small></span><i class="bi bi-passport document-type-icon"></i></label>
+                  </div>
+                </fieldset>
+                <div class="face-upload-grid" data-document-upload-grid>
+                  <div class="document-file-row live-document-file-row">
+                    <label class="document-file-label" for="live-image-input">Live image <span class="required-indicator">REQUIRED</span></label>
+                    <input id="live-image-input" type="file" accept="image/jpeg,image/png" data-live-image required>
+                    <small class="file-name" data-live-file-name>No image selected · PNG/JPEG · 5 MB maximum</small>
+                  </div>
+                </div>
+                <p class="face-form-error" data-face-error role="alert" hidden></p>
+                <div class="face-form-actions"><span><i class="bi bi-shield-check"></i> Images are used for this comparison request.</span><button class="button button-primary" type="submit" data-face-submit disabled><i class="bi bi-scan-face"></i> Compare faces</button></div>
+              </form>
+              <section class="face-results" data-face-results hidden aria-live="polite">
+                <div class="face-report-heading">
+                  <img src="{% static 'img/logo.png' %}" alt="Intellica Technologies logo">
+                  <div><p class="eyebrow">INTELLICA TECHNOLOGIES</p><h3>Face Verification Report</h3><span>Document-to-live image comparison</span></div>
+                  <div class="face-results-actions"><button class="button button-secondary" type="button" data-face-report hidden><i class="bi bi-file-earmark-pdf"></i> Download PDF report</button><button class="text-button" type="button" data-clear-face-results>Clear results</button></div>
+                </div>
+                <div class="face-verifier-block">
+                  <div class="face-report-section-title">Verifier Details</div>
+                  <dl class="face-verifier-grid">
+                    <div><dt>Login id</dt><dd>{{ login_id }}</dd></div>
+                    <div><dt>User name</dt><dd>{{ user.user_name }}</dd></div>
+                    <div><dt>Application number</dt><dd data-face-application>Pending</dd></div>
+                    <div><dt>State</dt><dd data-face-state>{{ user.state }}</dd></div>
+                    <div><dt>Product</dt><dd data-face-product>Pending</dd></div>
+                    <div><dt>Transaction id</dt><dd data-face-transaction>Pending</dd></div>
+                    <div><dt>Generated</dt><dd data-face-generated>—</dd></div>
+                  </dl>
+                </div>
+                <div class="face-result-summary">
+                  <div class="face-report-section-title">Comparison Summary</div>
+                  <p data-face-summary></p>
+                </div>
+                <h4 class="face-report-section-title face-image-results-title">Image-wise Match Results</h4>
+                <div class="face-pair-list" data-face-pairs></div>
+              </section>
+            </section>
+            <article class="panel idr-secondary-card"><span class="service-icon violet"><i class="bi bi-file-earmark-richtext"></i></span><div><p class="eyebrow">DOCUMENT SERVICES</p><h2>Document recognition</h2><p>Document processing is available through configured service integrations.</p></div><span class="service-status coming-soon">Portal form coming soon</span></article>
+          </section>
+
+          <section class="dashboard-view" data-view-panel="idr-history" hidden>
+            <div class="page-heading"><div><p class="eyebrow">ACTIVITY</p><h1>IDR History</h1><p>Face and document processing history associated with your account.</p></div><button class="button button-secondary" type="button" data-refresh-history><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
+            <section class="panel history-panel"><div class="panel-heading"><div><h2>Recent IDR activity</h2><p>Your latest requests are shown below.</p></div></div><div data-history-table>{% include "dashboard_requests.html" with request_items=all_requests %}</div></section>
+          </section>
+
+          <section class="dashboard-view" data-view-panel="api-keys" hidden><div class="page-heading"><div><p class="eyebrow">DEVELOPER WORKSPACE</p><h1>API access</h1><p>Use your configured API credentials to connect your applications.</p></div></div><section class="panel feature-placeholder"><i class="bi bi-key"></i><h2>API credentials are managed by your administrator</h2><p>Contact your account administrator to request or rotate API keys. Never share secret keys in chat or source control.</p></section></section>
+          <section class="dashboard-view" data-view-panel="billing" hidden><div class="page-heading"><div><p class="eyebrow">ACCOUNT</p><h1>Billing</h1><p>Usage and billing details for your workspace.</p></div></div><section class="panel feature-placeholder"><i class="bi bi-credit-card"></i><h2>Billing overview</h2><p>For billing questions, contact your Intellica account administrator.</p></section></section>
+          <section class="dashboard-view" data-view-panel="audit" hidden><div class="page-heading"><div><p class="eyebrow">ACCOUNT SECURITY</p><h1>Audit Logs</h1><p>Review activity recorded for this workspace.</p></div></div><section class="panel feature-placeholder"><i class="bi bi-shield-check"></i><h2>Workspace activity</h2><p>Audit log access is managed by your account administrator.</p></section></section>
+          <section class="dashboard-view" data-view-panel="settings" hidden><div class="page-heading"><div><p class="eyebrow">PREFERENCES</p><h1>Settings</h1><p>Your signed-in account and workspace.</p></div></div><section class="panel settings-card"><div><span class="settings-label">USERNAME</span><strong>{{ user.user_name }}</strong></div><div><span class="settings-label">LOGIN ID</span><strong>{{ login_id }}</strong></div><div><span class="settings-label">CLIENT</span><strong>{{ client_name }}</strong></div><div><span class="settings-label">ACCOUNT STATUS</span><strong class="active-status"><i class="bi bi-check-circle-fill"></i> Active</strong></div><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="button button-secondary" type="submit">Sign out <i class="bi bi-box-arrow-right"></i></button></form></section></section>
+        </div>
+      </main>
+    </div>
+    <div class="sidebar-scrim" data-sidebar-close></div>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+  </body>
+</html>

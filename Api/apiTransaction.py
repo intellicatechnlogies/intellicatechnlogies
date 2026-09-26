@@ -1,5 +1,4 @@
 from Api.models         import transactions_log
-from pytz               import timezone
 from datetime           import datetime as dt
 
 class apiTransaction():

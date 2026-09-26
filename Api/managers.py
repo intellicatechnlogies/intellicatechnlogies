@@ -1,6 +1,5 @@
 from django.db          import models
 from datetime           import datetime as dt
-from pytz               import timezone
 from django.db.models   import F, Count
 from openpyxl           import load_workbook
 from os                 import getcwd, path as file_path_util
