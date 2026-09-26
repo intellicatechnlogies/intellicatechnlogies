@@ -169,8 +169,8 @@
                   <div><p class="eyebrow">INTELLICA TECHNOLOGIES</p><h3>Face Verification Report</h3><span>Document-to-live image comparison</span></div>
                   <div class="face-results-actions"><button class="button button-secondary" type="button" data-face-report hidden><i class="bi bi-file-earmark-pdf"></i> Download PDF report</button><button class="text-button" type="button" data-clear-face-results>Clear results</button></div>
                 </div>
-                <div class="face-verifier-block">
-                  <div class="face-report-section-title">Verifier Details</div>
+                <details class="face-report-disclosure face-verifier-block">
+                  <summary class="face-report-section-title">Verifier Details</summary>
                   <dl class="face-verifier-grid">
                     <div><dt>Login id</dt><dd>{{ login_id }}</dd></div>
                     <div><dt>User name</dt><dd>{{ user.user_name }}</dd></div>
@@ -180,13 +180,15 @@
                     <div><dt>Transaction id</dt><dd data-face-transaction>Pending</dd></div>
                     <div><dt>Generated</dt><dd data-face-generated>—</dd></div>
                   </dl>
-                </div>
-                <div class="face-result-summary">
-                  <div class="face-report-section-title">Comparison Summary</div>
-                  <p data-face-summary></p>
-                </div>
-                <h4 class="face-report-section-title face-image-results-title">Image-wise Match Results</h4>
-                <div class="face-pair-list" data-face-pairs></div>
+                </details>
+                <details class="face-report-disclosure face-result-summary">
+                  <summary class="face-report-section-title">Comparison Summary</summary>
+                  <div data-face-summary></div>
+                </details>
+                <details class="face-report-disclosure face-image-results">
+                  <summary class="face-report-section-title face-image-results-title">Image-wise Match Results</summary>
+                  <div class="face-pair-list" data-face-pairs></div>
+                </details>
               </section>
             </section>
             <article class="panel idr-secondary-card"><span class="service-icon violet"><i class="bi bi-file-earmark-richtext"></i></span><div><p class="eyebrow">DOCUMENT SERVICES</p><h2>Document recognition</h2><p>Document processing is available through configured service integrations.</p></div><span class="service-status coming-soon">Portal form coming soon</span></article>
