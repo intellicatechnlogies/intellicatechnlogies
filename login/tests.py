@@ -63,6 +63,10 @@ class LoginViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content.count(b"data-login-open"), 1)
         self.assertContains(response, '<dialog class="auth-dialog"', html=False)
+        contact_position = response.content.index(b'<a href="#contact">Contact</a>')
+        login_position = response.content.index(b'class="btn-getstarted login-nav-link"')
+        self.assertLess(contact_position, login_position)
+        self.assertContains(response, 'href="/login" data-login-open', html=False)
 
     def test_username_login_uses_existing_table_and_keeps_plaintext_password(self):
         user = self.create_user("correct-password")
@@ -118,6 +122,10 @@ class LoginViewTests(TestCase):
         self.assertContains(response, "Andhra Pradesh")
         self.assertContains(response, "Dadra and Nagar Haveli and Daman and Diu")
         self.assertContains(response, "Construction Equipment (CE)")
+        self.assertContains(response, '<details class="face-report-disclosure face-verifier-block">', html=False)
+        self.assertContains(response, '<details class="face-report-disclosure face-result-summary">', html=False)
+        self.assertContains(response, '<details class="face-report-disclosure face-image-results">', html=False)
+        self.assertContains(response, 'class="document-file-row live-document-file-row"', html=False)
 
     def test_service_history_is_scoped_to_signed_in_login_users_row(self):
         user = self.create_user()

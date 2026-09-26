@@ -28,6 +28,9 @@ RUN pip3 install -r requirements.txt
 # Copy the Django application code into the container
 COPY . /app/
 
+# Collect static assets for WhiteNoise to serve with DEBUG=False
+RUN python3 manage.py collectstatic --noinput
+
 # Expose port 8000 to the outside world
 EXPOSE 8000
 
