@@ -4,7 +4,6 @@
 
     Unless you want to dance on 'Billy Jeans' on your keyboard with a panic face.
 """
-from decouple import config
 from munch import Munch
 from termcolor import cprint
 
@@ -91,24 +90,10 @@ class Config:
     def __init__(self):
         self.config_data  = configData
 
-        # Application config...
-        try:    
-            GLANCE_ENV = config("GLANCE_ENV")
-            if GLANCE_ENV=="PRODUCTION":
-                self.DEBUG_MODE = False
-                self.PRODUCTION = True
-            elif GLANCE_ENV=="STAGING":
-                self.DEBUG_MODE = True
-                self.PRODUCTION = True
-            else:
-                self.DEBUG_MODE = True
-                self.PRODUCTION = True
-        except: 
-            GLANCE_ENV      = "LOCAL"
-            self.DEBUG_MODE = True
-            self.PRODUCTION = False
-        
-        self.__environment = "settings.production" if GLANCE_ENV == "PRODUCTION" else "settings.staging" if GLANCE_ENV == "STAGING" else "settings.local"
+        # Keep application configuration identical in local and production runs.
+        self.DEBUG_MODE = False
+        self.PRODUCTION = True
+        self.__environment = "settings.production"
 
         # Database Config...
         self.__dbConfig    = self.config_data["DATABASE_CONFIG"]

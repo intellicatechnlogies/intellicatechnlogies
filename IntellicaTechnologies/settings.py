@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import Csv, config
-from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,21 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# Production values are supplied through environment variables (or a local .env).
-DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
-SECRET_KEY = config("DJANGO_SECRET_KEY", default="")
-if not SECRET_KEY or SECRET_KEY.startswith("replace-"):
-    if DEBUG:
-        SECRET_KEY = "insecure-local-development-key-only"
-    else:
-        raise ImproperlyConfigured("Set DJANGO_SECRET_KEY to a strong production secret.")
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-ds-s*%@q!k*+lne!z_aig1a6kqp=^m^8a(ng33(*7=a*(w6a89'
 
-ALLOWED_HOSTS = config(
-    "DJANGO_ALLOWED_HOSTS",
-    default="localhost,127.0.0.1",
-    cast=Csv(),
-)
-CSRF_TRUSTED_ORIGINS = config("DJANGO_CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -65,6 +54,7 @@ REST_FRAMEWORK = {
  }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,12 +66,19 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = config(
-    "DJANGO_CORS_ALLOWED_ORIGINS",
-    default="https://www.intellicatechnology.com,https://api.intellicatechnology.com",
-    cast=Csv(),
-)
+CORS_ALLOW_ALL_ORIGINS = False  # Use this or `CORS_ORIGIN_WHITELIST`
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:8000",
+    "https://www.intellicatechnology.com",
+    "https://api.intellicatechnology.com",
+    "http://test.intellicatechnology.com",
+    "http://intellicatechnology.com",
+    
+]
+
+CORS_ALLOW_HEADERS = '*'
+CORS_ALLOW_METHODS= '*'
 
 ROOT_URLCONF = 'IntellicaTechnologies.urls'
 
@@ -107,44 +104,30 @@ WSGI_APPLICATION = 'IntellicaTechnologies.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DB_ENGINE = config("DB_ENGINE", default="sqlite3").lower()
-if DB_ENGINE in {"postgres", "postgresql", "django.db.backends.postgresql"}:
-    postgres_settings = {
-        "NAME": config("DB_NAME", default=""),
-        "USER": config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST": config("DB_HOST", default=""),
-        "PORT": config("DB_PORT", default="5432"),
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-    missing_database_settings = [name for name, value in postgres_settings.items() if not value]
-    if missing_database_settings:
-        raise ImproperlyConfigured(
-            "Set the PostgreSQL settings: " + ", ".join(f"DB_{name}" for name in missing_database_settings)
-        )
-    database_options = {}
-    database_sslmode = config("DB_SSLMODE", default="")
-    if database_sslmode:
-        database_options["sslmode"] = database_sslmode
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            **postgres_settings,
-            "CONN_MAX_AGE": config("DB_CONN_MAX_AGE", default=60, cast=int),
-            "OPTIONS": database_options,
-        }
-    }
-elif DB_ENGINE == "sqlite3":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": config("DB_NAME", default=str(BASE_DIR / "db.sqlite3")),
-            "OPTIONS": {
-                "timeout": config("DB_SQLITE_TIMEOUT", default=30, cast=int),
-            },
-        }
-    }
-else:
-    raise ImproperlyConfigured("DB_ENGINE must be 'sqlite3' or 'postgresql'.")
+}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',  # PostgreSQL database backend
+#         'NAME': 'intellica_dev',  # Database name
+#         'USER': 'postgres',   # Database user
+#         'PASSWORD': 'XsIBOOUD&2=oJ-s~HpO%Pz',  # Database password
+#         'HOST': 'database-2.czog2io4mn87.us-east-1.rds.amazonaws.com',  # Host address
+#         'PORT': '5432',  # Default PostgreSQL port
+#     }
+# }
 
 
 
@@ -178,34 +161,18 @@ USE_I18N = True
 
 USE_TZ = True
 
+CORS_ALLOW_ALL_ORIGINS =True
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": (
-            "whitenoise.storage.CompressedStaticFilesStorage"
-            if DEBUG
-            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
-        ),
-    },
-}
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# Nginx must set X-Forwarded-Proto based on the client-facing HTTPS connection.
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = config("DJANGO_SECURE_SSL_REDIRECT", default=not DEBUG, cast=bool)
-SESSION_COOKIE_SECURE = config("DJANGO_SESSION_COOKIE_SECURE", default=not DEBUG, cast=bool)
-CSRF_COOKIE_SECURE = config("DJANGO_CSRF_COOKIE_SECURE", default=not DEBUG, cast=bool)
-SECURE_HSTS_SECONDS = config("DJANGO_SECURE_HSTS_SECONDS", default=0, cast=int)
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
 
 # Default primary key field type
@@ -215,4 +182,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Face comparison accepts up to ten base64-encoded images (5 MB each).
 DATA_UPLOAD_MAX_MEMORY_SIZE = 75 * 1024 * 1024
-

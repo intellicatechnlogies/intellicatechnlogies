@@ -27,11 +27,11 @@ COPY requirements.txt ./
 RUN python3 -m pip install --upgrade pip && pip3 install -r requirements.txt
 COPY . .
 
-# Build compressed, fingerprinted assets without embedding a runtime secret.
-RUN DJANGO_DEBUG=False DJANGO_SECRET_KEY=build-only-not-a-runtime-secret python3 manage.py collectstatic --noinput
+# Build compressed, fingerprinted assets using the project's fixed settings.
+RUN python3 manage.py collectstatic --noinput
 
 RUN useradd --create-home --shell /usr/sbin/nologin appuser && chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8000
-CMD ["sh", "-c", "exec gunicorn IntellicaTechnologies.wsgi:application --bind 0.0.0.0:8000 --workers ${WEB_CONCURRENCY:-2} --timeout ${GUNICORN_TIMEOUT:-180} --access-logfile - --error-logfile -"]
+CMD ["gunicorn", "IntellicaTechnologies.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1", "--timeout", "180", "--access-logfile", "-", "--error-logfile", "-"]

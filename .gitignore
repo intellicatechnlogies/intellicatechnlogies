@@ -19,13 +19,13 @@
 # static/
 
 # # Virtual environment
-# venv/
-# env/
-# .venv/
-# .env/
-# .env
-# .env.*
-# !.env.example
+venv/
+env/
+.venv/
+.env/
+.env
+.env.*
+!.env.example
 
 # # Docker
 # *.log
