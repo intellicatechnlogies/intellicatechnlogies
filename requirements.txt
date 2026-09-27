@@ -24,7 +24,6 @@ pikepdf
 pillow
 psycopg2-binary
 pycryptodomex
-python-decouple
 python-jose
 python-memcached
 qrcode
