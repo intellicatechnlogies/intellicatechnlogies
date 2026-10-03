@@ -44,6 +44,10 @@ jobs:
             sudo chown -R raumi:www-data $PROJECT_DIR
             sudo chmod -R 755 $PROJECT_DIR/staticfiles
 
+            # Ensure socket directory exists
+            sudo mkdir -p /run/gunicorn
+            sudo chown raumi:www-data /run/gunicorn
+
             # Gunicorn systemd service
             sudo tee /etc/systemd/system/gunicorn.service > /dev/null <<EOF
             [Unit]
@@ -55,6 +59,9 @@ jobs:
             Group=www-data
             WorkingDirectory=$PROJECT_DIR
             ExecStart=$VENV_DIR/bin/gunicorn --workers 3 --bind unix:/run/gunicorn/gunicorn.sock IntellicaTechnologies.wsgi:application
+            RuntimeDirectory=gunicorn
+            Restart=always
+            RestartSec=5
 
             [Install]
             WantedBy=multi-user.target
@@ -105,4 +112,4 @@ jobs:
             sudo systemctl reload nginx
 
             # Generate new SSL each deploy
-            sudo certbot --nginx -d intellicatechnology.com -d www.intellicatechnology.com --non-interactive --agree-tos -m admin@intellicatechnology.com --force-renewal
+            sudo certbot --nginx -d intellicatechnology.com -d www.intellicatechnology.com --non-interactive --agree-tos -m sales@intellicatechnology.com --force-renewal
