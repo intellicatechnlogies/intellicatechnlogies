@@ -2,7 +2,7 @@ name: Django CI/CD Pipeline
 
 on:
   push:
-    branches: [ "test" ]
+    branches: ["main"]
 
 jobs:
   deploy:
