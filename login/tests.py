@@ -322,15 +322,15 @@ class LoginViewTests(TestCase):
             login_id=user.login_id,
             request_id=request_id,
             service_name="Cface",
-            Application_number="APP-2026-008",
-            State="Sikkim",
+            Application_number="WRONG-DB-APP",
+            State="Wrong DB State",
         )
         transactions_log.objects.create(
             login_id=user.login_id,
             trx_id=request_id,
-            appl_no="APP-2026-008",
-            product="Construction Equipment (CE)",
-            state="Sikkim",
+            appl_no="WRONG-DB-APP",
+            product="Wrong DB Product",
+            state="Wrong DB State",
         )
         service_result.objects.create(
             login_id=user.login_id + 1,
@@ -339,13 +339,23 @@ class LoginViewTests(TestCase):
         )
         stored_result = {
             "imageid": {"PAN_INPUT": "pan-ref", "LIVE_INPUT": "live-ref"},
+            "report_metadata": {
+                "application_number": "APP-2026-008",
+                "state": "Sikkim",
+                "product": "Construction Equipment (CE)",
+            },
             "result": {
-                "cf_overview": {"NUM_IMG": 2, "MATCH": 1, "NO_MATCH": 0, "INVALID": 0},
+                "cf_overview": {"NUM_IMG": 2, "MATCH": 1, "NO_MATCH": 1, "INVALID": 0},
                 "cf_result": [{
                     "SRC_TITLE": "PAN",
                     "TRGT_TITLE": "LIVE",
                     "PERCENT": 98.5,
                     "FLAG": "MATCH",
+                }, {
+                    "SRC_TITLE": "PAN",
+                    "TRGT_TITLE": "LIVE",
+                    "PERCENT": 25.0,
+                    "FLAG": "NOMATCH",
                 }],
             },
         }
@@ -369,11 +379,65 @@ class LoginViewTests(TestCase):
         self.assertIn("APP-2026-008", rendered_html)
         self.assertIn("Sikkim", rendered_html)
         self.assertIn("Construction Equipment (CE)", rendered_html)
+        self.assertIn('class="is-match">Match</span>', rendered_html)
+        self.assertIn('class="is-nonmatch">No Match</span>', rendered_html)
+        self.assertIn('class="pdf-watermark"', rendered_html)
+        self.assertIn("opacity: 0.055", rendered_html)
+        self.assertIn('class="report-label">Input</p>', rendered_html)
+        self.assertIn("Construction Equipment (CE)", rendered_html)
         self.assertIn('class="cover"', rendered_html)
         self.assertIn('class="service-report"', rendered_html)
 
         unauthorized = self.client.get("/pdfReport/?trxid=face-report-other-user")
         self.assertEqual(unauthorized.status_code, 404)
+
+    def test_face_report_post_uses_submitted_input_metadata(self):
+        user = self.create_user()
+        self.post_login(user.user_name, "plain-password")
+        request_id = "face-report-post-metadata"
+        service_result.objects.create(
+            login_id=user.login_id,
+            request_id=request_id,
+            service_name="Cface",
+            Application_number="WRONG-DB-APP",
+            State="Wrong DB State",
+        )
+        payload = {
+            "transaction_id": request_id,
+            "report_metadata": {
+                "application_number": "APP-POST-2026",
+                "state": "Sikkim",
+                "product": "Construction Equipment (CE)",
+            },
+            "images": {
+                "PAN_INPUT": base64.b64encode(b"\x89PNG\r\n\x1a\nmock-image").decode("ascii"),
+                "LIVE_INPUT": base64.b64encode(b"\x89PNG\r\n\x1a\nmock-image").decode("ascii"),
+            },
+            "result": {
+                "cf_overview": {"NUM_IMG": 2, "MATCH": 1, "NO_MATCH": 0, "INVALID": 0},
+                "cf_result": [{
+                    "SRC_TITLE": "PAN",
+                    "TRGT_TITLE": "LIVE",
+                    "PERCENT": 98.5,
+                    "FLAG": "MATCH",
+                }],
+            },
+        }
+        with patch("Services.pdfReport.HTML") as pdf_renderer:
+            pdf_renderer.return_value.write_pdf.return_value = b"%PDF-post-metadata"
+            response = self.client.post(
+                "/pdfReport/",
+                data=json.dumps(payload),
+                content_type="application/json",
+            )
+
+        self.assertEqual(response.status_code, 200)
+        rendered_html = pdf_renderer.call_args.kwargs["string"]
+        self.assertIn("APP-POST-2026", rendered_html)
+        self.assertIn("Sikkim", rendered_html)
+        self.assertIn("Construction Equipment (CE)", rendered_html)
+        self.assertNotIn("WRONG-DB-APP", rendered_html)
+        self.assertNotIn("Wrong DB State", rendered_html)
 
     def test_face_report_download_finds_legacy_key_without_history_row(self):
         user = self.create_user()

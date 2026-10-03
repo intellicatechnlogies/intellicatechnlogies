@@ -293,9 +293,44 @@
       if (productDisplay) productDisplay.textContent = faceForm.elements.product.value;
       const generatedDisplay = resultsPanel.querySelector("[data-face-generated]");
       if (generatedDisplay) generatedDisplay.textContent = new Date().toLocaleString();
-      const summaryText = document.createElement("p");
-      summaryText.textContent = `${overview.MATCH ?? 0} match${overview.MATCH === 1 ? "" : "es"} · ${overview.NO_MATCH ?? 0} non-match${overview.NO_MATCH === 1 ? "" : "es"}${overview.INVALID ? ` · ${overview.INVALID} invalid` : ""}`;
-      summary.replaceChildren(summaryText);
+      const summaryTable = document.createElement("table");
+      summaryTable.className = "face-summary-table";
+      summaryTable.setAttribute("aria-label", "Face comparison summary");
+      const tableHead = document.createElement("thead");
+      const headingRow = document.createElement("tr");
+      ["Comparison result", "Count"].forEach((heading) => {
+        const cell = document.createElement("th");
+        cell.scope = "col";
+        cell.textContent = heading;
+        headingRow.append(cell);
+      });
+      tableHead.append(headingRow);
+      const tableBody = document.createElement("tbody");
+      const summaryMetrics = [
+        { label: "Images compared", value: overview.NUM_IMG ?? imageUrlsByResultTitle.size, icon: "bi-images", tone: "is-images" },
+        { label: "Matches", value: overview.MATCH, icon: "bi-check-circle-fill", tone: "is-matches" },
+        { label: "No matches", value: overview.NO_MATCH, icon: "bi-x-circle-fill", tone: "is-no-matches" },
+        { label: "Invalid", value: overview.INVALID, icon: "bi-exclamation-triangle-fill", tone: "is-invalid" },
+      ];
+      summaryMetrics.forEach(({ label, value, icon, tone }) => {
+        const row = document.createElement("tr");
+        row.className = tone;
+        const labelCell = document.createElement("th");
+        labelCell.scope = "row";
+        labelCell.className = "face-summary-label";
+        const labelIcon = document.createElement("i");
+        labelIcon.className = `bi ${icon}`;
+        labelIcon.setAttribute("aria-hidden", "true");
+        labelCell.append(labelIcon, document.createTextNode(label));
+        const valueCell = document.createElement("td");
+        valueCell.className = "face-summary-count";
+        const numericValue = Number(value ?? 0);
+        valueCell.textContent = String(Number.isFinite(numericValue) ? numericValue : 0);
+        row.append(labelCell, valueCell);
+        tableBody.append(row);
+      });
+      summaryTable.append(tableHead, tableBody);
+      summary.replaceChildren(summaryTable);
 
       const resultPairs = responseData.result?.cf_result || [];
       resultPairs.forEach((pair) => {
@@ -453,6 +488,11 @@
           body: JSON.stringify({
             transaction_id: currentReport.responseData.transaction_id,
             result: currentReport.responseData.result,
+            report_metadata: currentReport.responseData.report_metadata || {
+              application_number: faceForm.elements.application_number.value.trim(),
+              state: faceForm.elements.state.value,
+              product: faceForm.elements.product.value,
+            },
             images,
           }),
         });
