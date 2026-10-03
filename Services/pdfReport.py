@@ -127,6 +127,11 @@ def create_face_pdf_response(transaction_id, comparison_result, image_data, veri
         if not isinstance(pair, dict):
             raise ValueError("An image-pair result is invalid.")
         pair_data = dict(pair)
+        match_flag = str(pair_data.get("FLAG", "")).strip().upper()
+        pair_data["IS_MATCH"] = match_flag in {"MATCH", "SAME_IMAGE"}
+        pair_data["DISPLAY_FLAG"] = "Match" if pair_data["IS_MATCH"] else (
+            "No Match" if match_flag in {"NOMATCH", "NO_MATCH"} else pair_data.get("FLAG", "No result")
+        )
         pair_data["SRC_IMAGE_URI"] = image_uris_by_title.get(pair_data.get("SRC_TITLE", ""), "")
         pair_data["TRGT_IMAGE_URI"] = image_uris_by_title.get(pair_data.get("TRGT_TITLE", ""), "")
         pairs.append(pair_data)
@@ -156,7 +161,7 @@ def create_face_pdf_response(transaction_id, comparison_result, image_data, veri
 
 
 def get_report_verifier_details(user, transaction_id, saved_metadata=None):
-    saved_metadata = saved_metadata or {}
+    saved_metadata = saved_metadata if isinstance(saved_metadata, dict) else {}
     service_record = service_result.objects.filter(
         request_id=transaction_id,
         login_id=user.login_id,
@@ -166,29 +171,26 @@ def get_report_verifier_details(user, transaction_id, saved_metadata=None):
         login_id=user.login_id,
     ).order_by("sno").first()
 
-    application_number = (
-        getattr(service_record, "Application_number", "")
-        or getattr(transaction_record, "appl_no", "")
-        or saved_metadata.get("application_number")
-        or transaction_id
-    )
-    state = (
-        getattr(service_record, "State", "")
-        or getattr(transaction_record, "state", "")
-        or saved_metadata.get("state")
-        or user.state
-    )
-    product = (
-        getattr(transaction_record, "product", "")
-        or saved_metadata.get("product")
-        or "Face Comparison"
-    )
-    if application_number == "Test":
-        application_number = saved_metadata.get("application_number") or transaction_id
-    if state == "Test":
-        state = saved_metadata.get("state") or user.state
-    if product == "Test":
-        product = saved_metadata.get("product") or "Face Comparison"
+    def first_report_value(*values):
+        return next(
+            (str(value).strip() for value in values if value is not None and str(value).strip() and str(value).strip() != "Test"),
+            "",
+        )
+
+    application_number = first_report_value(
+        saved_metadata.get("application_number"),
+        getattr(service_record, "Application_number", ""),
+        getattr(transaction_record, "appl_no", ""),
+    ) or transaction_id
+    state = first_report_value(
+        saved_metadata.get("state"),
+        getattr(service_record, "State", ""),
+        getattr(transaction_record, "state", ""),
+    ) or user.state
+    product = first_report_value(
+        saved_metadata.get("product"),
+        getattr(transaction_record, "product", ""),
+    ) or "Face Comparison"
 
     return {
         "login_id": user.login_id,
@@ -235,7 +237,11 @@ def cface_report(request):
                 )
 
             image_data = normalize_report_images(payload.get("images"))
-            verifier_details = get_report_verifier_details(user, transaction_id)
+            verifier_details = get_report_verifier_details(
+                user,
+                transaction_id,
+                payload.get("report_metadata"),
+            )
             response = create_face_pdf_response(
                 transaction_id,
                 payload.get("result"),
