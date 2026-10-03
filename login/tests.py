@@ -123,7 +123,7 @@ class LoginViewTests(TestCase):
         self.assertContains(response, "Dadra and Nagar Haveli and Daman and Diu")
         self.assertContains(response, "Construction Equipment (CE)")
         self.assertContains(response, '<details class="face-report-disclosure face-verifier-block">', html=False)
-        self.assertContains(response, '<details class="face-report-disclosure face-result-summary">', html=False)
+        self.assertContains(response, '<details class="face-report-disclosure face-result-summary" open>', html=False)
         self.assertContains(response, '<details class="face-report-disclosure face-image-results">', html=False)
         self.assertContains(response, 'class="document-file-row live-document-file-row"', html=False)
 
